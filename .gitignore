@@ -1,0 +1,26 @@
+## Core latex/pdflatex auxiliary files
+*.aux
+*.lo*
+*.log
+*.s*
+*.toc
+*.out
+*.gz
+
+## Intermediate documents
+*.dvi
+*.ps
+
+## Bibliography files
+*.bbl
+*.blg
+
+## Build tool files
+*.fdb_latexmk
+*.fls
+
+## VS Code specific
+.vscode/
+
+## The PDF (Optional - see note below)
+# *.pdf
