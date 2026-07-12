@@ -1,5 +1,5 @@
 \usepackage[top=2.5cm, bottom=3cm, left=3cm, right=3cm]{geometry}
-\usepackage[spanish,activeacute]{babel} %-----tildes  [spanish,activeacute,es-tabla]
+\usepackage[spanish, main=english]{babel} %-----tildes  [spanish,activeacute,es-tabla]
 \usepackage[pdftex]{graphicx}
 \usepackage{amsmath, amssymb}%-----estructuras matemáticas
 %
@@ -53,10 +53,10 @@
 \setcounter{secnumdepth}{4}%define el contador para los 4 niveles de titulo
 
 
-\renewcommand{\thesection}{\Roman{section}}
-\renewcommand{\thesubsection}{\Alph{subsection}}   
-\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
-\renewcommand{\theparagraph}{\alph{paragraph}}
+% \renewcommand{\thesection}{\Roman{section}}
+% \renewcommand{\thesubsection}{\Alph{subsection}}   
+% \renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+% \renewcommand{\theparagraph}{\alph{paragraph}}
 
 
 
@@ -68,14 +68,68 @@
 %\titleformat{\subparagraph}[runin]{\itshape\normalsize\bfseries}{\thesubparagraph}{1em}{}
 
 
+% \usepackage{fancyhdr}
+
+% \definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} %rgb=83,129,53
+
+% \setlength{\headheight}{25pt}
+% \renewcommand{\headrule}{{\color{verdeUdeA}\rule{\textwidth}{1pt}}}
+% \renewcommand{\headrulewidth}{2pt}
+% \lhead{\footnotesize\MakeUppercase{\smalltitulo }}\chead{}\rhead{{\color{white}Rufino}\thepage} %borrar los encabezados
+% \cfoot{}
+
+% --- Configuración de Encabezados Dinámicos ---
+% \usepackage{fancyhdr}
+
+% \definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} %rgb=83,129,53
+
+% \pagestyle{fancy}
+% % \fancyhf{} % Limpia todos los encabezados y pies de página
+
+% % Definimos que \leftmark solo guarde el nombre del capítulo (sin la palabra "Chapter X")
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
+
+% % Configuración del encabezado
+% \lhead{\footnotesize\MakeUppercase{\leftmark}} % <--- Aquí cambiamos \smalltitulo por \leftmark
+% \chead{}
+% \rhead{\thepage} % El número de página a la derecha
+
+% % Línea verde de la UdeA
+% \renewcommand{\headrule}{{\color{verdeUdeA}\rule{\textwidth}{1pt}}}
+% \renewcommand{\headrulewidth}{2pt}
+
+% % Aseguramos que el pie de página esté vacío
+% \cfoot{}
+
+% --- Configuración de Encabezados Dinámicos e Inteligentes ---
 \usepackage{fancyhdr}
+\usepackage{etoolbox} % Necesario para la lógica IF
 
-\definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} %rgb=83,129,53
+\definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} 
 
-\setlength{\headheight}{25pt}
+\pagestyle{fancy}
+\fancyhf{} % Limpia encabezados y pies anteriores
+
+% 1. Definimos cómo se guarda la marca del capítulo
+% Esto hace que \leftmark contenga solo el título del capítulo
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
+
+% 2. Lógica del Encabezado Izquierdo (\lhead)
+% IF: Si \leftmark está vacío (antes del primer capítulo), muestra \smalltitulo
+% ELSE: Si ya hay un capítulo, muestra \leftmark
+\lhead{\footnotesize\MakeUppercase{%
+  \expandafter\ifstrempty\expandafter{\leftmark}{%
+    \smalltitulo%
+  }{%
+    \leftmark%
+  }%
+}}
+
+\chead{}
+\rhead{\thepage} % Número de página a la derecha
+
+% 3. Línea verde de la UdeA
 \renewcommand{\headrule}{{\color{verdeUdeA}\rule{\textwidth}{1pt}}}
 \renewcommand{\headrulewidth}{2pt}
-\lhead{\footnotesize\MakeUppercase{\smalltitulo }}\chead{}\rhead{{\color{white}Rufino}\thepage} %borrar los encabezados
 \cfoot{}
-
 
