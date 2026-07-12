@@ -1,0 +1,66 @@
+\usepackage[top=2.5cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage[spanish, main=english]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref}
+   \hypersetup{colorlinks, linkcolor=blue, urlcolor=blue, citecolor={red}}
+\usepackage{color}
+
+% --- Configuración de Encabezados Dinámicos ---
+\usepackage{fancyhdr}
+
+\definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} 
+
+\pagestyle{fancy}
+\fancyhf{} 
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
+
+% Lógica mejorada:
+% Si el contador de capítulos es > 0, muestra el nombre del capítulo (\leftmark)
+% Si es 0 (estamos en el resumen, TOC, etc.), muestra el título corto (\smalltitulo)
+\lhead{\footnotesize\MakeUppercase{%
+  \ifnum\value{chapter}>0
+    \leftmark%
+  \else
+    \smalltitulo%
+  \fi
+}}
+
+\chead{}
+\rhead{\thepage} 
+
+\renewcommand{\headrule}{{\color{verdeUdeA}\rule{\textwidth}{1pt}}}
+\renewcommand{\headrulewidth}{2pt}
+\cfoot{}
+
+% % --- Configuración de Encabezados Dinámicos e Inteligentes ---
+% \usepackage{fancyhdr}
+% \usepackage{etoolbox} % Necesario para la lógica IF
+
+% \definecolor{verdeUdeA}{rgb}{0.325,0.506,0.208} 
+
+% \pagestyle{fancy}
+% \fancyhf{} % Limpia encabezados y pies anteriores
+
+% % 1. Definimos cómo se guarda la marca del capítulo
+% % Esto hace que \leftmark contenga solo el título del capítulo
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
+
+% % 2. Lógica del Encabezado Izquierdo (\lhead)
+% % IF: Si \leftmark está vacío (antes del primer capítulo), muestra \smalltitulo
+% % ELSE: Si ya hay un capítulo, muestra \leftmark
+% \lhead{\footnotesize\MakeUppercase{%
+%   \expandafter\ifstrempty\expandafter{\leftmark}{%
+%     \smalltitulo%
+%   }{%
+%     \leftmark%
+%   }%
+% }}
+
+% \chead{}
+% \rhead{\thepage} % Número de página a la derecha
+
+% % 3. Línea verde de la UdeA
+% \renewcommand{\headrule}{{\color{verdeUdeA}\rule{\textwidth}{1pt}}}
+% \renewcommand{\headrulewidth}{2pt}
+% \cfoot{}
