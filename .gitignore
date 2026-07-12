@@ -22,3 +22,4 @@
 ## VS Code specific
 .vscode/
 
+*.hd
