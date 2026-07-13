@@ -5,12 +5,17 @@ A Field Programmable Gate Array (FPGA) is an integrated circuit designed to be c
 
 In the context of Digital Signal Processing (DSP), the importance of FPGAs originates from their ability to exploit hardware-level parallelism. As noted by \cite[pp. 1--14]{FPGAbasedImplementationSignal2008}, many DSP algorithms such as Finite Impulse Response (FIR) filters, Fast Fourier Transforms (FFT), and matrix operations are inherently repetitive and computationally intensive. While a standard CPU would process these samples one by one, an FPGA can implement dedicated hardware pipelines that process multiple data points simultaneously. This results in significantly higher throughput and deterministic latency, which are critical requirements for real-time physics instrumentation and high-frequency data acquisition.
 
+\todo[inline]{also talk about specific one used (arty z7-20) \cite{ArtyZ7Reference} and its relevant specs in the project like the ADC and maybe why it would be better to change it for an external one. Talk about the PS and PL logic}
+
+\todo[inline]{talk about the addition of PS in the boards and why it is important and necesary}
 
 
-also talk about specific one used (arty z7-20) \cite{ArtyZ7Reference} and its relevant specs in the project like the ADC and maybe why it would be better to change it for an external one. Talk about the PS and PL logic
+
 
 \subsection{Communication Interfaces}
-Explain AXI protocols to understand a little bit why it is important to introduce an IP like the comblock or later a complete workflow with DMA, UDMA and HOG.
+
+\todo[inline]{Explain AXI protocols to understand a little bit why it is important to introduce an IP like the comblock or later a complete workflow with DMA, UDMA and HOG.}
+
 
 \subsection{Comblock}
 
@@ -32,14 +37,28 @@ The primary objective of the ComBlock is to provide a Hardware Abstraction Layer
 
 The integration of the ComBlock into a Vivado design follows a Plug-and-Play methodology within the IP Integrator environment. Once added to the Block Design, the ComBlock is connected to the Zynq Processing System through the AXI Interconnect, this task can be done automatically with the Vivado-IDE functions.
 
+\todo[inline]{maybe explain a little bit more in detail an example??}
 
-\emph{maybe explain a little bit more in detail an example??}
 
 \subsection{PYNQ}
 
 The development of custom hardware on FPGAs has traditionally been governed by Hardware Description Languages (HDLs), such as VHDL and Verilog. Unlike high-level programming languages (C or Python) that follow a sequential execution model, HDLs are used to describe the concurrent behavior and structural connectivity of digital logic. This fundamental difference imposes a steep learning curve on researchers, as hardware design requires deep knowledge of digital electronics and clock domain crossing. The productivity gap in FPGA design originates from the fact that even minor changes in a digital circuit require a full synthesis and implementation cycle, which can take from several minutes to hours. Furthermore, interfacing the hardware logic with a host computer for data analysis usually involves writing drivers in C. To address these challenges, the PYNQ framework was introduced \cite{PYNQ}.
 
-Hardware Description Languages and their high learning curve explain how PYNQ tries to solve this problem by simplifying its usage
+
+The core innovation of PYNQ is the introduction of Hardware Overlays. An overlay is a pre-compiled, highly-optimized bitstream that acts as a hardware library. Just as importing a library into python to perform complex mathematical operations without knowing the underlying assembly or C code, a PYNQ user can load an overlay into the FPGA dynamically at runtime. By using overlays, the complexity of the HDL design is encapsulated into a functional block with a standardized interface (typically AXI-based for communication PL-PS). This allows the researcher to treat the FPGA as a high-performance co-processor that can be reconfigured through simple Python commands.
+
+
+This approach simplifies FPGA usage in three key ways:
+\begin{itemize}
+\item \textbf{High-Level Interfacing:} Low-level memory-mapped I/O and DMA transactions are abstracted into Python objects. For instance, writing to an FPGA register becomes as simple as assigning a value to a variable in a Jupyter Notebook.
+\item \textbf{Ecosystem Integration:} Because the data resides in a Python environment, it can be passed directly to scientific libraries such as \textit{NumPy}, \textit{Pandas}, and \textit{Matplotlib}. For numerical processing, for data management, and real-time visualization.
+\item \textbf{Rapid Prototyping:} The use of Jupyter Notebooks allows for an interactive development workflow. Researchers can test hardware triggers, adjust acquisition parameters, and analyze data in a single, documented environment, significantly reducing development time.
+\end{itemize}
+
+
+
+\todo[inline, color=orange]{PYNQ usage examples high level and addition of section explaining how the image works in the board} 
+
 
 \subsection{HOG}
 How this framework reduces time and unifies hdl workflows in order to have a real collaborative environment on shared projects; also improving their replicability having in mind the open-hardware approach
