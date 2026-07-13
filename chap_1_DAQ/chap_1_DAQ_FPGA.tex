@@ -17,7 +17,7 @@ In the context of Digital Signal Processing (DSP), the importance of FPGAs origi
 \todo[inline]{Explain AXI protocols to understand a little bit why it is important to introduce an IP like the comblock or later a complete workflow with DMA, UDMA and HOG.}
 
 
-\subsection{Comblock}
+\subsection{Comblock} \label{sec:comblock}
 
 The communication between the Processing System (PS) and the Programmable Logic (PL) is one of the most critical and time-consuming aspects of FPGA-based instrumentation design. While the Advanced extensible Interface (AXI) standard provides the necessary framework for this interaction, implementing custom AXI-compliant slaves from scratch requires deep knowledge of bus handshaking, address decoding, and timing constraints. To mitigate this complexity, the International Centre for Theoretical Physics (ICTP) developed the ComBlock (Communication Block) \cite{FilesMasterRodrigo2021}, an open-source IP core designed to act as a versatile and simplified interface between the Zynq SoC's ARM processor and the custom logic implemented in the FPGA.
 
@@ -60,24 +60,22 @@ This approach simplifies FPGA usage in three key ways:
 \todo[inline, color=orange]{PYNQ usage examples high level and addition of section explaining how the image works in the board} 
 
 
-\subsection{HOG}
+\subsection{HDL on Git (Hog)}
 The management of FPGA projects within traditional version control systems present significant challenges. Tools like AMD Vivado used for the design of the FPGA typically generate large binary project files that are not suited for line-by-line differencing. Furthermore, these tools frequently rely on absolute paths and local environment configurations, which severely hinders the ability to compile in a different machine without substantial changes to the codebase. This complicates the ability of multiple researchers to collaborate on a shared codebase without encountering conflicts. To overcome these limitations, the Hog(HDL on Git) framework \cite{HogHogGitLab2026} was developed, primarily at the European Organization for Nuclear Research (CERN), to provide a structured, Tcl-based methodology for handling HDL code within Git repositories. 
 
 Tcl (Tool Command Language) is the standard language used to automate and control Electronic Design Automation (EDA) tools, such as AMD Vivado or Intel Quartus; These EDAs are built on a Tcl-first architecture. This means that every action you perform in the Graphical User Interface (GUI), such as clicking "Run Synthesis" is translated by the software into a specific Tcl command and executed in an internal console. This means that the construction of a project can be done with the appropriate use of Tcl commands.
 
 
-Hog unifies the HDL development cycle by shifting the project definition from a GUI-centric model to a recipe-based model. In a Hog-managed repository, the Vivado project file is treated as a disposable, temporary artifact. The "source of truth" resides in plain-text List Files (.src, .con, .sim), which contain relative paths to all source code, constraints, and IP cores.
+Hog unifies the HDL development cycle by shifting the project definition from a GUI-centric model to a recipe-based model. In a Hog-managed repository, the Vivado project file is treated as a disposable, temporary artifact. The source to reconstruct the Vivado project resides in plain-text List Files (.src, .con, .sim; extensions created and managed by Hog), which contain relative paths to all source code, block design, constraints, and IP cores.
 
-This approach reduces development time in several ways:
-\begin{itemize}
-\item \textbf{Automated Project Creation:} A new collaborator can recreate the entire local development environment—including Block Designs, IP configurations, and synthesis settings—by running a single script. This eliminates the manual setup phase that often leads to human error.
-\item \textbf{Continuous Integration (CI):} Hog is designed to integrate seamlessly with CI/CD runners (such as GitLab CI or GitHub Actions). This allows for the automatic synthesis and implementation of the design every time a change is pushed to the repository, ensuring that the master branch always contains a "buildable" and verified version of the firmware.
-\end{itemize}
+This approach reduces development time by allowing automated project creation. A new collaborator can recreate the entire local development environment including Block Designs, IP configurations, and synthesis settings by running a single script. This eliminates the manual setup phase that often leads to human error. Another great advantage of Hog is its direct integration to Git Submodules. This is particularly relevant for the integration of external IPs, such as the \textbf{ComBlock}, \cref{sec:comblock}, allowing different teams to maintain separate repositories for specific modules while integrating them into a top-level design. 
+
+A critical feature of Hog regarding traceability is the automatic versioning system. During the synthesis process, Hog queries Git to retrieve the unique commit SHA and a hex-formatted timestamp. These values are automatically embedded into the firmware registers. This ensures that every bitstream generated is uniquely linked to a specific state of the source code, allowing researchers to know exactly which version of the logic is running on a detector at any given time.
 
 
-How this framework reduces time and unifies hdl workflows in order to have a real collaborative environment on shared projects; also improving their replicability having in mind the open-hardware approach
+Hog improves replicability, it ensures that any researcher can clone an open-hardware repository, like the one presented in \cref{sec:comblock_API}, and produce a bitstream that is functionally identical. 
 
 
-\subsection{Comblock API for PYNQ}
+\subsection{Comblock API for PYNQ} \label{sec:comblock_API}
 Show the API created and the repo, how it simplifies the workflow and what good practices (HOG) are implemented for better usability. 
 
