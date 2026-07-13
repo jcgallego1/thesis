@@ -63,19 +63,6 @@
   keywords = {Science / Physics / Atomic & Molecular,Science / Physics / General,Technology & Engineering / Chemical & Biochemical}
 }
 
-@book{knollRadiationDetectionMeasurement2010a,
-  title = {Radiation {{Detection}} and {{Measurement}}},
-  author = {Knoll, Glenn F.},
-  year = 2010,
-  month = aug,
-  publisher = {John Wiley \& Sons},
-  abstract = {Known for its comprehensive coverage and up-to-date literature citations, this classic text provides students and instructors with the most complete coverage available of radiation detection and measurement. Over the decade that has passed since the publication of the 3rd edition, technical developments continue to enhance the instruments and techniques available for the detection and spectroscopy of ionizing radiation. The Fourth Edition of this invaluable resource incorporates the latest developments and cutting-edge technologies to make this the most up-to-date guide to the field available: ? Covers many new materials that are emerging as scintillators that can achieve energy resolution that is better by a factor of two compared with traditional materials ? Presents new material on ROC curves, micropattern gas detectors, new sensors for scintillation light, thick film semiconductors, and digital techniques in detector pulse processing ? Includes updated discussions on TLDs, neutron detectors, cryogenic spectrometers, radiation backgrounds, and the VME instrumentation standard},
-  googlebooks = {4vTJ7UDel5IC},
-  isbn = {978-0-470-13148-0},
-  langid = {english},
-  keywords = {Science / Physics / Atomic & Molecular,Science / Physics / General,Technology & Engineering / Chemical & Biochemical}
-}
-
 @article{merryVelocityAccelerationEstimation2010,
   title = {Velocity and Acceleration Estimation for Optical Incremental Encoders},
   author = {Merry, R. J. E. and {van de Molengraft}, M. J. G. and Steinbuch, M.},
@@ -92,6 +79,21 @@
   abstract = {Optical incremental encoders are extensively used for position measurements in motion systems. The position measurements suffer from quantization errors. Velocity and acceleration estimations obtained by numerical differentiation largely amplify the quantization errors. In this paper, the time stamping concept is used to obtain more accurate position, velocity and acceleration estimations. Time stamping makes use of stored events, consisting of the encoder counts and their time instants, captured at a high resolution clock. Encoder imperfections and the limited resolution of the capturing rate of the encoder events result in errors in the estimations. In this paper, we propose a method to extend the observation interval of the stored encoder events using a skip operation. Experiments on a motion system show that the velocity estimation is improved by 54\% and the acceleration estimation by 92\%.},
   keywords = {Angular acceleration,Angular position,Angular velocity,Data acquisition,Encoders,Quantization,Sensors},
   file = {/home/zotero_storage/Zotero/storage/8KFMYJHF/Merry et al. - 2010 - Velocity and acceleration estimation for optical incremental encoders.pdf;/home/zotero_storage/Zotero/storage/Y3LG6MWF/S0957415809001214.html}
+}
+
+@article{sivanathanDesignFPGABasedHighSpeed2024,
+  title = {Design of an {{FPGA-Based High-Speed Data Acquisition System}} for {{Frequency Scanning Interferometry Long-Range Measurement}}},
+  author = {Sivanathan, Sivagunalan and Roula, Mohammed Ali and Li, Kang and Qiao, Dun and Copner, Nigel Joseph},
+  year = 2024,
+  journal = {IEEE Open Journal of Instrumentation and Measurement},
+  volume = {3},
+  pages = {1--10},
+  issn = {2768-7236},
+  doi = {10.1109/OJIM.2023.3347268},
+  urldate = {2026-07-13},
+  abstract = {Frequency scanning interferometry (FSI) has become a popular method for long-range, targetbased, distance measurements. However, the cost of developing such systems, particularly the electronic components required for high-speed data acquisition (DAQ), remains a significant concern. In this article, we present a cost-effective, FPGA-based real-time DAQ system specifically designed for FSI, with a focus on long absolute distance measurements. Our design minimizes the use of third-party intellectual property (IP) and is fully compatible with the Xilinx FPGA 7 series families. The hardware employs a 160-MS/s, 16-bit dual-channel ADC interfaced to the FPGA via a low-voltage differential signaling (LVDS). The proposed system incorporates an external sampling clock, referred to as the K-clock, which linearizes the laser's tuning rate, enabling optical measurements to be sampled at equal optical frequency intervals rather than equal time intervals. Additionally, we present the design of a high-speed, 160-MS/s ADC module for the front-end analog signal interface and the LVDS connection to the chosen FPGA. We demonstrate that the digitized data samples can be efficiently transmitted to a polarization controller (PC) application via a USB interface for further processing.},
+  keywords = {Adaptive optics,Data acquisition,Data acquisition (DAQ),FIFO,FPGA,Frequency measurement,frequency scanning interferometry (FSI) hardware,Hardware,high-speed DAQ,Interferometry,Laser radar,LIDAR,Measurement by laser beam,Optical interferometry,Optical reflection,Optical signal processing,Optical variables measurement},
+  file = {/home/zotero_storage/Zotero/storage/7TMCQNL3/Sivanathan et al. - 2024 - Design of an FPGA-Based High-Speed Data Acquisition System for Frequency Scanning Interferometry Lon.pdf}
 }
 
 @misc{VelocityObservationsDiscrete,
@@ -122,23 +124,4 @@
   langid = {english},
   keywords = {Engineering,Physics},
   file = {/home/zotero_storage/Zotero/storage/JN7UBU98/Yoon et al. - 2023 - Development of an advanced velocity modulator for a portable Mössbauer spectrometer.pdf}
-}
-
-@article{yoonDevelopmentAdvancedVelocity2023a,
-  title = {Development of an Advanced Velocity Modulator for a Portable {{M\"ossbauer}} Spectrometer},
-  author = {Yoon, Joanne and Lee, Jaegi and Ye, Sung-Joon and Bang, Young-bong},
-  year = 2023,
-  month = nov,
-  journal = {Scientific Reports},
-  volume = {13},
-  number = {1},
-  pages = {19856},
-  publisher = {Nature Publishing Group},
-  issn = {2045-2322},
-  doi = {10.1038/s41598-023-46846-x},
-  urldate = {2026-07-12},
-  abstract = {M\"ossbauer spectroscopy is a nuclear spectroscopic technique that measures changes in energy on an atomic scale. In a M\"ossbauer spectrometer, a velocity modulator oscillates a radioactive source to vary the energy of gamma rays. Conventional velocity modulators use wires primarily as motion guides; however, the tension state of these wires may change over time. Membrane springs are thus used as an alternative to wires; however, they also present certain challenges related to their design, manufacturing, and assembly. Instead of wires or membrane springs, this study used a linear bearing with preloaded compression springs. The advantage of this mechanism is that permanent deformation or changes in spring stiffness minimally occur during spring assembly and operation. The developed velocity modulator is compact and light, making it ideal for portable applications. A digital controller is used to easily modify and customize control parameters and the supporting algorithm, which is not easily achieved with conventional analog controllers. Moreover, by applying a switching amplifier, low-power operation is also achieved. Feedforward control values are calculated by an iterative learning method that is robust to the control of repeated motion. Using finite element method simulations and experiments, the performance of the developed prototype was evaluated. The velocity signal demonstrated linearity with a correlation with a straight line of approximately 0.996 for a triangular velocity profile (satisfactory performance).},
-  copyright = {2023 The Author(s)},
-  langid = {english},
-  keywords = {Engineering,Physics}
 }
