@@ -150,16 +150,107 @@ An ideal semiconductor without any traces of other elements or impurities is cal
 
 \subsection{Semiconductors as Detectors}
 
-\subsubsection{Photoconductivity in Semiconductors}
+Semiconductor sensors operate by capturing incident photons and converting them into measurable electrical charges through the internal photoelectric effect. This effect relies on the absorption of photons with energies ($h\nu$) exceeding the semiconductor's bandgap, which excites electrons from the valence band to the conduction band, leaving behind holes. The resulting electron-hole pairs can be separated and collected under an applied electric field, generating a photocurrent that is proportional to the incident light intensity. 
 
-When a semiconductor is exposed to light with photon energies greater than its bandgap, electrons in the valence band can absorb this energy and transition to the conduction band, leaving behind holes. This process generates additional electron-hole pairs, increasing the material's electrical conductivity. The number of electron-hole pairs generated is proportional to the intensity of the incident light, making semiconductors effective as photodetectors. The efficiency of this process depends on factors such as the wavelength of the light, the material's bandgap, and the presence of impurities or defects that can trap charge carriers.
+The performance and operational wavelength of semiconductor photodetectors are fundamentally governed by their material properties, internal energy transition levels, and device architecture, which are carefully optimized to achieve desired sensitivity and spectral response characteristics \cite[Chap 13.]{szePhysicsSemiconductorDevices2007}. The relationship linking the wavelength of interest to the internal transition energy $\Delta E$ is given by:
+\begin{equation}
+    \lambda = \frac{hc}{\Delta E}
+    \label{eq:photon_energy}
+\end{equation}
+where $\lambda$ represents the wavelength, $h$ is Planck's constant, and $c$ is the speed of light. Because photons with energy $h\nu \ge \Delta E$ can induce carrier excitation, this relation establishes the minimum wavelength detection limit. In most semiconductor photodetectors, this transition energy corresponds directly to the material's bandgap ($E_g$).
 
-\todo[inline]{put references}
+When a semiconductor is illuminated by photons possessing energy greater than or equal to the bandgap, the incident optical energy is absorbed, promoting valence electrons into the conduction band while leaving behind mobile holes. This photon-absorption process creates discrete electron-hole pairs as the incident photons are annihilated. The generation of these mobile charge carriers directly increases the material's bulk electrical conductivity—a macroscopic phenomenon known as photoconductivity. 
 
-\subsubsection{Photodiodes as Detectors}
+The resulting concentration of generated electron-hole pairs is proportional to the intensity of the incident light, making semiconductor structures effective optical transducers. The overall conversion efficiency and response dynamics depend heavily on factors such as the excitation wavelength, the semiconductor bandgap, and the presence of lattice impurities or defects that can act as trap centers for charge carriers.
 
+\subsubsection{PIN Photodiode Structure}
 
-\todo[inline]{photodiode working}
+\todo[inline]{Chap 13 photodetectors \cite[text]{szePhysicsSemiconductorDevices2007}}
+
+The p-i-n (PIN) photodiode is a specialized junction diode in which a lightly doped or intrinsic ($i$) high-resistivity layer is inserted between heavily doped $p^+$ and $n^+$ semiconductor regions. Because of the very low density of free carriers and high resistivity within this intrinsic region, any applied reverse-bias voltage drops almost entirely across the $i$-layer, ensuring it is fully depleted even at zero or very low bias levels\cite[Chap 8.]{bhattacharyaSemiconductorOptoelectronicDevices1997}. 
+
+A fundamental engineering trade-off in PIN diode design involves the thickness of the depletion region ($W$). To achieve high response speed and wide bandwidth, the depletion layer width must be kept small to minimize carrier transit times. Conversely, high quantum efficiency and responsivity require a wider depletion layer to ensure complete absorption of incident photons. Operating as a unity-gain device with a maximum internal quantum efficiency approaching $100\%$, the bandwidth of a PIN photodiode is ultimately constrained either by transit time effects—where photogenerated carriers drift across the $i$-layer at saturation velocity—or by external circuit parameters. Additionally, minority carrier diffusion from outside the depletion region introduces slower tail currents that can degrade high-speed performance\cite[Chap 8.]{bhattacharyaSemiconductorOptoelectronicDevices1997}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+        % ==========================================
+        % (a) Physical Structure
+        % ==========================================
+        \node[above left, font=\small] at (0.8, 3.4) {(a)};
+        
+        % p+ region
+        \draw[thick, fill=gray!20] (0.8,2.2) rectangle (2.2,3.4);
+        \node[font=\small] at (1.5,2.8) {$p^+$};
+        
+        % i region
+        \draw[thick, fill=white] (2.2,2.2) rectangle (5.8,3.4);
+        \node[font=\small] at (4.0,2.8) {$i$};
+        
+        % n+ region
+        \draw[thick, fill=gray!20] (5.8,2.2) rectangle (7.2,3.4);
+        \node[font=\small] at (6.5,2.8) {$n^+$};
+        
+        % Boundaries and x axis
+        \draw[thin, dashed] (2.2,1.9) -- (2.2,3.6);
+        \node[below, font=\scriptsize] at (2.2,1.9) {$0$};
+        \draw[thin, dashed] (5.8,1.9) -- (5.8,3.6);
+        \node[below, font=\scriptsize] at (5.8,1.85) {$W$};
+        
+        \draw[-{Latex[length=2.5mm]}, thick] (3.0,1.2) -- (6.8,1.2) node[right, font=\small] {$x$};
+        
+        % Incident light and reflection
+        % \draw[-{Latex[length=2.5mm]}, thick, decorate, decoration={snake,amplitude=.35mm,segment length=1.8mm}] (-0.6,2.8) -- (0.8,2.8);
+        \draw[->, >=Latex, thick, decorate, decoration={snake, amplitude=.4mm, segment length=2mm, post length=1mm}] (-0.6,2.8) -- (0.8,2.8);
+        \node[left, font=\small] at (-0.6,2.8) {$P_{\text{inc}}$};
+        \draw[-{Latex[length=2mm]}, thin] (0.3,3.3) -- (-0.2,3.8);
+        \node[above, font=\scriptsize] at (-0.2,3.8) {$\Theta_R$};
+
+        % ==========================================
+        % (b) Energy Band Diagram
+        % ==========================================
+        \node[above left, font=\small] at (0.8, 0.4) {(b)};
+        
+        % Conduction band Ec and Valence band Ev sloping down under reverse bias
+        \draw[thick] (0.8, 0.1) -- (2.2, -0.1) -- (5.8, -1.5) -- (7.2, -1.7) node[right, font=\small] {$E_c$};
+        \draw[thick] (0.8, -1.1) -- (2.2, -1.3) -- (5.8, -2.7) -- (7.2, -2.9) node[right, font=\small] {$E_v$};
+        
+        % Incident light in band diagram
+        % \draw[-{Latex[length=2.5mm]}, thick, decorate, decoration={snake,amplitude=.3mm,segment length=1.5mm}] (-0.6,-0.5) -- (0.8,-0.5);
+        \draw[->, >=Latex, thick, decorate, decoration={snake, amplitude=.4mm, segment length=2mm, post length=1mm}] (-0.6,-0.5) -- (0.8,-0.5);
+        \node[left, font=\small] at (-0.6,-0.5) {$P_{\text{inc}}$};
+
+        % 1. Left generation (p+ region, diffusion of electrons)
+        \draw[-{Latex[length=2mm]}, thin] (1.5, -1.2) -- (1.5, -0.1);
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (1.5, 0.0) {$-$};
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (1.5, -1.2) {$+$};
+        \draw[-{Latex[length=2mm]}, thin] (1.5, 0.15) to[out=0,in=180] (2.6, 0.05);
+        \node[above, font=\scriptsize] at (2.0, 0.05) {$J_{\text{diff}}$};
+
+        % 2. Middle generation (i region, drift current)
+        \draw[-{Latex[length=2mm]}, thin] (4.0, -2.1) -- (4.0, -1);
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (4.0, -0.9) {$-$};
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (4.0, -2.1) {$+$};
+        \node[font=\scriptsize, right] at (4.1, -1.5) {$J_{\text{dr}}$};
+
+        % 3. Right generation (n+ region, diffusion of holes)
+        \draw[-{Latex[length=2mm]}, thin] (6.5, -2.7) -- (6.5, -1.6);
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (6.5, -1.5) {$-$};
+        \node[circle,draw,inner sep=0.5pt,font=\tiny,fill=white] at (6.5, -2.7) {$+$};
+        \draw[-{Latex[length=2mm]}, thin] (6.5, -2.85) to[out=180,in=0] (5.4, -2.75);
+        \node[below, font=\scriptsize] at (6.0, -2.8) {$J_{\text{diff}}$};
+
+        % Applied bias qV_R indicator on the right
+        \draw[dashed] (6.6,-0.5) -- (7.4,-0.5);
+        \draw[dashed] (6.6,-2.1) -- (7.4,-2.1);
+        \draw[<->, thin] (7,-0.6) -- node[right, font=\scriptsize] {$qV_R$} (7,-2);
+
+    \end{tikzpicture}
+    \caption{Schematic cross-section (a) and energy band diagram under reverse bias (b) of a PIN photodiode, showing carrier generation, drift ($J_{\text{dr}}$), and diffusion ($J_{\text{diff}}$) components \cite[Chap 8.]{bhattacharyaSemiconductorOptoelectronicDevices1997}.}
+    \label{fig:pin_photodiode}
+\end{figure}
+
+In the \cref{fig:pin_photodiode} we can see the schematic cross-section of a PIN photodiode and its corresponding energy band diagram under reverse bias voltage. The incident photons ($P_{\text{inc}}$) are absorbed in the intrinsic region, some are reflected as $\Theta_R$ indicates, generating electron-hole pairs. The electric field across the depletion region causes the electrons to drift towards the n+ region and the holes towards the p+ region, resulting in a fast photocurrent ($J_{\text{dr}}$) that can be measured externally and thus provide a high-speed response.
 
 \subsection{Integration on the setup}
 \todo[inline]{photos and setup of the 3d printed support and the photodiode with the interferometer  and the circuit used to convert the current into voltage.}

@@ -7,6 +7,124 @@
 
 \todo[inline]{Description of the experimental setup including the optical components and their arrangement, show the benefits, robustness ...}
 
+The animation below demonstrates the phase shift of interference fringes as an actuator displaces the mirror in the Michelson interferometer, accompanied by the shifting 1D intensity profile $I(x)$ captured by the camera.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.85]
+        % ==========================================
+        % STEP 1: t_1 (Initial Position)
+        % ==========================================
+        \begin{scope}[shift={(0,0)}]
+            % Camera View Box (Denser fringes for smooth gradient)
+            \draw[thick, fill=black] (0,3.2) rectangle (4.2,6.2);
+            \node[above, font=\footnotesize] at (2.1,6.3) {Step 1 ($t_1$): Initial};
+            \foreach \x in {0.10, 0.13, ..., 4.10} {
+                \pgfmathsetmacro{\intensity}{sin(\x * 280)*50 + 50}
+                \draw[color=red!\intensity!black, line width=0.45mm] (\x, 3.35) -- (\x, 6.05);
+            }
+            \draw[thick] (0,3.2) rectangle (4.2,6.2);
+
+            % Intensity Plot (Enlarged width and height)
+            \begin{axis}[
+                at={(0,0)},
+                anchor=south west,
+                width=5.2cm,
+                height=3.1cm,
+                xmin=0, xmax=4.2,
+                ymin=-0.2, ymax=1.2,
+                axis lines=left,
+                xlabel={$x$ position},
+                ylabel={$I(x)$},
+                font=\scriptsize,
+                xtick={1, 2, 3},
+                ytick={0,1},
+                grid=major,
+                grid style={dashed, gray!70},
+                xlabel style={below=1pt},
+                ylabel style={left=1pt}
+            ]
+                \addplot[domain=0:4.2, samples=120, thick, blue] {sin(deg(x*4.8))*0.5 + 0.5};
+            \end{axis}
+        \end{scope}
+
+        % ==========================================
+        % STEP 2: t_2 (Intermediate Displacement)
+        % ==========================================
+        \begin{scope}[shift={(5.7,0)}]
+            % Camera View Box
+            \draw[thick, fill=black] (0,3.2) rectangle (4.2,6.2);
+            \node[above, font=\footnotesize] at (2.1,6.3) {Step 2 ($t_2$): Displaced};
+            \foreach \x in {0.10, 0.13, ..., 4.10} {
+                \pgfmathsetmacro{\intensity}{sin(\x * 280 + 60)*50 + 50}
+                \draw[color=red!\intensity!black, line width=0.45mm] (\x, 3.35) -- (\x, 6.05);
+            }
+            \draw[thick] (0,3.2) rectangle (4.2,6.2);
+
+            % Intensity Plot (Enlarged width and height)
+            \begin{axis}[
+                at={(0,0)},
+                anchor=south west,
+                width=5.2cm,
+                height=3.1cm,
+                xmin=0, xmax=4.2,
+                ymin=-0.2, ymax=1.2,
+                axis lines=left,
+                xlabel={$x$ position},
+                ylabel={$I(x)$},
+                font=\scriptsize,
+                xtick={1, 2, 3},
+                ytick={0,1},
+                grid=major,
+                grid style={dashed, gray!70},
+                xlabel style={below=1pt},
+                ylabel style={left=1pt}
+            ]
+                \addplot[domain=0:4.2, samples=120, thick, blue] {sin(deg(x*4.8) + 60)*0.5 + 0.5};
+            \end{axis}
+        \end{scope}
+
+        % ==========================================
+        % STEP 3: t_3 (Advanced Displacement)
+        % ==========================================
+        \begin{scope}[shift={(11.4,0)}]
+            % Camera View Box
+            \draw[thick, fill=black] (0,3.2) rectangle (4.2,6.2);
+            \node[above, font=\footnotesize] at (2.1,6.3) {Step 3 ($t_3$): Advanced};
+            \foreach \x in {0.10, 0.13, ..., 4.10} {
+                \pgfmathsetmacro{\intensity}{sin(\x * 280 + 120)*50 + 50}
+                \draw[color=red!\intensity!black, line width=0.45mm] (\x, 3.35) -- (\x, 6.05);
+            }
+            \draw[thick] (0,3.2) rectangle (4.2,6.2);
+
+            % Intensity Plot (Enlarged width and height)
+            \begin{axis}[
+                at={(0,0)},
+                anchor=south west,
+                width=5.2cm,
+                height=3.1cm,
+                xmin=0, xmax=4.2,
+                ymin=-0.2, ymax=1.2,
+                axis lines=left,
+                xlabel={$x$ position},
+                ylabel={$I(x)$},
+                font=\scriptsize,
+                xtick={1, 2, 3},
+                ytick={0,1},
+                grid=major,
+                grid style={dashed, gray!70},
+                xlabel style={below=1pt},
+                ylabel style={left=1pt}
+            ]
+                \addplot[domain=0:4.2, samples=120, thick, blue] {sin(deg(x*4.8) + 120)*0.5 + 0.5};
+            \end{axis}
+        \end{scope}
+
+    \end{tikzpicture}
+    \caption{Sequential time-steps illustrating high-density fringe gradients captured by the camera sensor and the corresponding phase translation of peaks in the 1D intensity profile $I(x)$ during mirror displacement.}
+    \label{fig:three_step_fringes}
+\end{figure}
+
 \section{Benefits from this setup }
 
 \todo[inline]{regarding size compactness, robustness, stability ... and showcasing common problems solved from different implementations of this system}

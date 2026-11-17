@@ -1,5 +1,13 @@
 \section{Camera}
-The camera used in this project is the C270 HD WEBCAM, shown in \cref{fig:camera}, a USB 2.0 webcam manufactured by Logitech. It features a sensor capable of capturing video at a resolution of 640 x 480 pixels at 30 frames per second. Its compact design and USB interface allow for easy integration into the experimental setup for real-time image acquisition and processing of the interferometer fringes pattern.
+
+
+\subsection{CMOS (Complementary Metal-Oxide-Semiconductor Sensor)}
+
+\todo[inline]{how does the sensor works the cmos or ccd with the physics behind it.}
+
+\subsection{C270 HD WEBCAM}
+
+The camera used in this project is the C270 HD WEBCAM, shown in \cref{fig:camera}, a USB 2.0 webcam manufactured by Logitech. It features a CMOS sensor capable of capturing video at a resolution of 640 x 480 pixels at 30 frames per second. Its compact design and USB interface allow for easy integration into the experimental setup for real-time image acquisition and processing of the interferometer fringes pattern.
 
 This camera was selected due to its balance between cost and performance, while it may not offer high speed or high-resolution capabilities, it is sufficient for the requirements of this project in a calibration stage. The camera's output is processed by a common python library used for computer vision tasks, OpenCV.
 
@@ -26,9 +34,7 @@ This camera was selected due to its balance between cost and performance, while 
 The camera is dismantled to access the sensor directly, allowing for a more compact and flexible integration into the experimental setup, the lens was removed to avoid distortion of the pattern \cref{fig:camera_exposed}. A 3d printed support was designed to hold the camera in place, ensuring stability and proper alignment with the interferometer's optical path. The camera is connected to a computer via USB, where the acquired images are processed in real-time to extract the fringes and count their movement.
 
 
-\subsection{inner workings of the sensor}
 
-\todo[inline]{how does the sensor works the cmos or ccd with the physics behind it.}
 
 \subsection{implementation of open cv regarding the fringe counting ...}
 \todo[inline]{Add text regarding the openCV implementation and how the basic algorithm of counting fringes work}
