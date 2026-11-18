@@ -3,9 +3,7 @@
 
 \todo[inline]{How are the innerworkings of the michelson interferometer with diagrams and references}
 
-\section{Experimental implementation}
 
-\todo[inline]{Description of the experimental setup including the optical components and their arrangement, show the benefits, robustness ...}
 
 The animation below demonstrates the phase shift of interference fringes as an actuator displaces the mirror in the Michelson interferometer, accompanied by the shifting 1D intensity profile $I(x)$ captured by the camera.
 
@@ -124,6 +122,49 @@ The animation below demonstrates the phase shift of interference fringes as an a
     \caption{Sequential time-steps illustrating high-density fringe gradients captured by the camera sensor and the corresponding phase translation of peaks in the 1D intensity profile $I(x)$ during mirror displacement.}
     \label{fig:three_step_fringes}
 \end{figure}
+
+\section{Interferometer Design and Hardware Configuration}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/interferometer_top_big.png}
+        \caption{Interferometer}
+        \label{fig:interferometer_top}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/interferometer_top_zoomed.png}
+        \caption{Interferometer (Zoomed)}
+        \label{fig:interferometer_top_zoomed}
+    \end{subfigure}
+    \caption{Interferometer Experimental Setup. a) Top view; b) Zoomed top view with details of the mirrors and axis mounting.}
+    \label{fig:interferometer_setup}
+\end{figure}
+
+
+In the \cref{fig:interferometer_setup} we can see the top view of the  interferometer constructed from a recycled case of a Blu-ray optical system. The setup consists of a laser diode, beam splitter, a fixed mirror, and a movable mirror mounted on an axis that is coupled to a needle via a small flexure, allowing for vibration reduction when transferring the motion. All the optical components were attached using UV-resin in order to avoid fumes sticking to the optical components.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/interferometer_side.jpg}
+        \caption{Interferometer}
+        \label{fig:interferometer_side}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/interferometer_side_front.png}
+        \caption{Interferometer (Zoomed)}
+        \label{fig:interferometer_side_front}
+    \end{subfigure}
+    \caption{Interferometer Experimental Setup. a) Side view; b) Front view.}
+    \label{fig:interferometer_sides}
+\end{figure}
+
+\todo[inline]{Description of the experimental setup including the optical components and their arrangement, show the benefits, robustness ...}
 
 \section{Benefits from this setup }
 
