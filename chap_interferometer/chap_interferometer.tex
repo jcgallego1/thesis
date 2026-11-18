@@ -144,28 +144,28 @@ The animation below demonstrates the phase shift of interference fringes as an a
 \end{figure}
 
 
-In the \cref{fig:interferometer_setup} we can see the top view of the  interferometer constructed from a recycled case of a Blu-ray optical system. The setup consists of a laser diode, beam splitter, a fixed mirror, and a movable mirror mounted on an axis that is coupled to a needle via a small flexure, allowing for vibration reduction when transferring the motion. All the optical components were attached using UV-resin in order to avoid fumes sticking to the optical components.
+In the \cref{fig:interferometer_setup} we can see the top view of the  interferometer constructed as shown in the figure, the interferometer is compact and robust, with a design that minimizes vibrations and misalignments by using a rigid casing and keeping the optical components close together, this creates a stable optical path and reduces the impact of external disturbances due to the vibrations of the system as a whole. The compactness of the device also allows for easier alignment of the optical components, as the distances between them are small, reducing the chances of misalignment when the shafts transfer the actuator motion into the movable mirror, the thermal expansion effects are also reduced due to uniform heat conduction between the components because of their proximity, improving the overall performance of the interferometer. The design compactness also allows for easy coupling to other systems and can be integrated into larger experimental setups without taking up much space, making it suitable for applications where space is limited.
 
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/interferometer_side.jpg}
+        \includegraphics[width=\textwidth]{images/interferometer_side.png}
         \caption{Interferometer}
-        \label{fig:interferometer_side}
+        \label{fig:interferometer_side_a}
     \end{subfigure}\hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/interferometer_side_front.png}
         \caption{Interferometer (Zoomed)}
-        \label{fig:interferometer_side_front}
+        \label{fig:interferometer_side_front_b}
     \end{subfigure}
-    \caption{Interferometer Experimental Setup. a) Side view; b) Front view.}
+    \caption{Interferometer Experimental Setup. a) Side view, 1: Fixed mirror, 2: Movable mirror shaft, 3: Movable needle shaft (transfering the motion the the outside of the interferometer casing); b) Front view, 1: Beam splitter, 2: Movable mirror, 3: Divergent lens, 4: Junction between the two shafts.}
     \label{fig:interferometer_sides}
 \end{figure}
 
-\todo[inline]{Description of the experimental setup including the optical components and their arrangement, show the benefits, robustness ...}
+The experimental setup contains a compact Michelson interferometer integrated directly into a recycled optical unit from a Blu-ray player, as detailed in \cref{fig:interferometer_sides}. A critical mechanical feature of this implementation is the decoupling and motion-transfer assembly. The movable mirror is mounted on a precision sliding shaft (labeled 2 in \cref{fig:interferometer_side_a}) that runs parallel to a secondary movable needle shaft (labeled 3 in \cref{fig:interferometer_side_a}). These two shafts are mechanically linked via a small compliant flexure junction (labeled 4 in \cref{fig:interferometer_side_front_b}b). This flexure is crucial for isolating the movable mirror from external mechanical disturbances; it acts as a vibration-damping filter that prevents high-frequency mechanical noise or binding forces from the outside actuation mechanism from distorting the mirror displacement. The needle shaft extends outward through the interferometer casing to interface with the external actuation system being characterized.
 
-\section{Benefits from this setup }
+To maintain optical integrity during assembly, all internal optical components—including the beamsplitter, fixed mirror, movable mirror, and divergent lens (labeled 3 in \cref{fig:interferometer_side_front_b}) were secured using UV-curable resin. This bonding method was specifically chosen over traditional solvent-based glues to prevent out-gassing and volatile residue condensation on the delicate optical surfaces.
 
-\todo[inline]{regarding size compactness, robustness, stability ... and showcasing common problems solved from different implementations of this system}
+\subsection{Pattern Obtained}
