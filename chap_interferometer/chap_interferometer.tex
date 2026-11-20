@@ -1,71 +1,90 @@
 \chapter{Michelson Interferometer}
-\section{How it works}
-
-\todo[inline]{How are the innerworkings of the michelson interferometer with diagrams and references}
 
 \begin{figure}[htbp]
     \centering
-    \begin{tikzpicture}[scale=1.1, >=Stealth]
+    \begin{tikzpicture}[
+        scale=1.0,
+        beam/.style={thick, draw=black!80},
+        fwd/.style={
+            postaction={
+                decorate,
+                decoration={
+                    markings,
+                    mark=at position #1 with {\arrow{Stealth[length=2mm, width=1.5mm]}}
+                }
+            }
+        },
+        rev/.style={
+            postaction={
+                decorate,
+                decoration={
+                    markings,
+                    mark=at position #1 with {\arrow{Stealth[length=2mm, width=1.5mm, reversed]}}
+                }
+            }
+        }
+    ]
         % ==========================================
-        % 1. Laser Source
+        % Source plane S (Left)
         % ==========================================
-        \draw[thick, fill=gray!20] (-0.2, 1.8) rectangle (1.4, 2.2);
-        \node[font=\small] at (0.8, 2.0) {Laser};
-        % Incident laser beam
-        \draw[-{Latex[length=2.5mm]}, thick, red] (1.4, 2.0) -- (2.8, 2.0);
-        \node[above, font=\scriptsize, red] at (2.1, 2.0) {$I_0$};
+        \draw[very thick, black!85] (-3.2, -1.1) -- (-3.2, 1.1);
+        \node[above, font=\small] at (-3.2, 1.15) {$S$};
 
         % ==========================================
-        % 2. Beam Splitter (at 45 degrees)
+        % Beam Splitter BS (Center, tilted at 45 deg)
+        % Top edge passes through beam intersection (0,0)
         % ==========================================
-        \begin{scope}[shift={(3.0,2.0)}, rotate=45]
-            \draw[thick, fill=blue!15] (-0.3, -0.3) rectangle (0.3, 0.3);
-            \draw[thin, gray] (-0.3, -0.3) -- (0.3, 0.3); % dividing interface
+        \begin{scope}[shift={(0,0)}, rotate=45]
+            \draw[very thick, fill=gray!15, draw=black!85] (-1.05, -0.28) rectangle (1.05, 0);
         \end{scope}
-        \node[above left, font=\small] at (3.2, 2.5) {Beam Splitter};
+        \node[above right, font=\small] at (0.75, 0.65) {BS};
 
         % ==========================================
-        % 3. Arm 1: Fixed Mirror (Top)
+        % Mirror M2 (Top)
         % ==========================================
-        \draw[thick, red] (3.0, 2.3) -- (3.0, 4.5);
-        \draw[thick, red, dashed] (3.0, 4.5) -- (3.0, 2.3); % returning beam
-        % Mirror 1 surface
-        \draw[thick, fill=gray!40] (2.6, 4.5) rectangle (3.4, 4.7);
-        \node[above, font=\small] at (3.0, 4.7) {Fixed Mirror ($M_1$)};
-        % Path label
-        \node[right, font=\scriptsize] at (3.1, 3.4) {Arm 1 ($L_1$)};
+        \draw[very thick, fill=gray!25, draw=black!85] (-0.75, 3.35) rectangle (0.75, 3.65);
+        \node[above, font=\small] at (0, 3.7) {$M2$};
 
         % ==========================================
-        % 4. Arm 2: Movable Mirror (Right)
+        % Mirror M1 (Right)
         % ==========================================
-        \draw[thick, red] (3.3, 2.0) -- (5.5, 2.0);
-        \draw[thick, red, dashed] (5.5, 2.0) -- (3.3, 2.0); % returning beam
-        % Mirror 2 surface
-        \draw[thick, fill=gray!40] (5.5, 1.6) rectangle (5.7, 2.4);
-        \node[above, font=\small] at (5.6, 2.5) {Movable Mirror ($M_2$)};
-        % Actuator / PZT indicator
-        \draw[<->, thin] (5.7, 1.3) -- (6.3, 1.3) node[midway, below, font=\scriptsize] {Actuator / PZT};
-        \draw[thin, dashed] (5.7, 1.6) -- (5.7, 1.3);
-        % Path label
-        \node[above, font=\scriptsize] at (4.4, 2.0) {Arm 2 ($L_2$)};
+        \draw[very thick, fill=gray!25, draw=black!85] (3.35, -0.75) rectangle (3.65, 0.75);
+        \node[below, font=\small] at (3.5, -0.85) {$M1$};
 
         % ==========================================
-        % 5. Recombined Beam & Photodetector (Bottom)
+        % Beam (1): Source S to Beam Splitter BS
         % ==========================================
-        \draw[thick, red] (3.0, 1.7) -- (3.0, 0.3);
-        \node[right, font=\scriptsize] at (3.1, 1.0) {Interference};
-        % Photodetector / Screen
-        \draw[thick, fill=gray!20] (2.4, 0.0) rectangle (3.6, 0.3);
-        \node[below, font=\small] at (3.0, 0.0) {Photodetector / CCD};
+        \draw[beam, fwd=0.55] (-3.2, 0) -- (0, 0);
+        \node[above, font=\small] at (-1.6, 0.1) {$(1)$};
 
+        % ==========================================
+        % Beam (2): BS up to M2 and back
+        % ==========================================
+        \draw[beam, fwd=0.55, rev=0.75] (0, 0) -- (0, 3.35);
+        \node[right, font=\small] at (0.12, 1.55) {$(2)$};
+
+        % ==========================================
+        % Beam (3): BS right to M1 and back
+        % ==========================================
+        \draw[beam, fwd=0.55, rev=0.75] (0, 0) -- (3.35, 0);
+        \node[above, font=\small] at (1.75, 0.12) {$(3)$};
+
+        % ==========================================
+        % Beam (4): Recombined output downward
+        % ==========================================
+        \draw[beam, fwd=0.55] (0, 0) -- (0, -2.5);
+        \node[right, font=\small] at (0.12, -1.45) {$(4)$};
+
+        % Sub-label (a)
+        \node[below, font=\small] at (0, -2.65) {(a)};
     \end{tikzpicture}
-    \caption{Schematic optical configuration of a Michelson interferometer, showing beam splitting, orthogonal arm paths ($L_1, L_2$), movable mirror displacement, and output recombination toward the detector.}
-    \label{fig:michelson_schematic}
+    \caption{Schematic of the Michelson interferometer, \cite[Chap 8.]{pedrottiIntroductionOptics2007}.}
+    \label{fig:schematic_michelson_interferometer}
 \end{figure}
 
+A schematic of the michelson interferometer is shown in \cref{fig:schematic_michelson_interferometer}, from the source of light (S) we get the beam (1) being split by the beam splitter (BS) resulting in beams (3) transmitted and (2) by reflection, these reflect on mirrors (M1) and (M2) respectively and return to the BS where (3) is reflected and (2) is transmitted, and the two beams come together exiting the interferometer as beam (4). Thus, beam 4 includes rays that have traveled different optical paths and will demonstrate interference \cite[Chap 8.]{pedrottiIntroductionOptics2007}.
 
 
-The animation below demonstrates the phase shift of interference fringes as an actuator displaces the mirror in the Michelson interferometer, accompanied by the shifting 1D intensity profile $I(x)$ captured by the camera.
 
 \begin{figure}[htbp]
     \centering
