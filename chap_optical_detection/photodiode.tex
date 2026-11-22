@@ -164,7 +164,7 @@ When a semiconductor is illuminated by photons possessing energy greater than or
 The resulting concentration of generated electron-hole pairs is proportional to the intensity of the incident light, making semiconductor structures effective optical transducers. The overall conversion efficiency and response dynamics depend heavily on factors such as the excitation wavelength, the semiconductor bandgap, and the presence of lattice impurities or defects that can act as trap centers for charge carriers.
 
 \subsubsection{PIN Photodiode Structure}
-
+\label{sec:PIN_Photodiode}
 The p-i-n (PIN) photodiode is a specialized junction diode in which a lightly doped or intrinsic ($i$) high-resistivity layer is inserted between heavily doped $p^+$ and $n^+$ semiconductor regions. Because of the very low density of free carriers and high resistivity within this intrinsic region, any applied reverse-bias voltage drops almost entirely across the $i$-layer, ensuring it is fully depleted even at zero or very low bias levels\cite[Chap 8.]{bhattacharyaSemiconductorOptoelectronicDevices1997}. 
 
 A fundamental engineering trade-off in PIN diode design involves the thickness of the depletion region ($W$). To achieve high response speed and wide bandwidth, the depletion layer width must be kept small to minimize carrier transit times. Conversely, high quantum efficiency and responsivity require a wider depletion layer to ensure complete absorption of incident photons. Operating as a unity-gain device with a maximum internal quantum efficiency approaching $100\%$, the bandwidth of a PIN photodiode is ultimately constrained either by transit time effects—where photogenerated carriers drift across the $i$-layer at saturation velocity—or by external circuit parameters. Additionally, minority carrier diffusion from outside the depletion region introduces slower tail currents that can degrade high-speed performance\cite[Chap 8.]{bhattacharyaSemiconductorOptoelectronicDevices1997}.
@@ -250,5 +250,205 @@ A fundamental engineering trade-off in PIN diode design involves the thickness o
 
 In the \cref{fig:pin_photodiode} we can see the schematic cross-section of a PIN photodiode and its corresponding energy band diagram under reverse bias voltage. The incident photons ($P_{\text{inc}}$) are absorbed in the intrinsic region, some are reflected as $\Theta_R$ indicates, generating electron-hole pairs. The electric field across the depletion region causes the electrons to drift towards the n+ region and the holes towards the p+ region, resulting in a fast photocurrent ($J_{\text{dr}}$) that can be measured externally and thus provide a high-speed response.
 
-\subsection{Integration on the setup}
-\todo[inline]{photos and setup of the 3d printed support and the photodiode with the interferometer  and the circuit used to convert the current into voltage.}
+\section{Circuit Schematic for Photodiode}
+\label{sec:circuit_schematic}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[op amp, xscale=1.29, yscale=1.29](N1) at (10.107, 6.555){} node[anchor=east] at ([xshift=0.14cm]N1.west){$U1A\,(TLV3542)$};
+	\draw (10, 5.859) to[short] (10, 5);
+	\node[tlground] at (10, 5){};
+	\draw (10, 7.25) to[short] (10, 8);
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.465cm] at (10, 8.5){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (9.5, 8.75){+3.3V};
+	\draw (8.572, 7.187) to[short] (5, 7.187);
+	\draw (5, 4) to[empty photodiode, l={$BPW34$}] (5, 7.187);
+	\node[tlground] at (5, 4){};
+	\draw (8.572, 5.923) to[short] (7.5, 5.923);
+	\draw (7.5, 5.923) to[short] (7.5, 2);
+	\draw (7.5, 2) to[short] (5.5, 2);
+	\draw (7, 2) to[american resistor, l={$R_1=4.7k\Omega$}, label distance=-0.02cm] (7, 4);
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.465cm] at (6.75, 4.5){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (6.25, 4.75){+3.3V};
+	\draw (7, 2) to[american resistor, l={$R_2=10k\Omega$}, label distance=-0.02cm] (7, -0);
+	\node[tlground] at (7, -0){};
+	\draw (5.5, 2) to[capacitor, l_={$C_1=100nF$}, label distance=-0.02cm] (5.5, -0);
+	\node[tlground] at (5.5, -0){};
+	\draw (7.5, 7.187) to[short] (7.5, 11.5);
+	\draw (7.5, 10) to[american resistor, l={$R_f=10k\Omega$}, label distance=-0.02cm] (12, 10);
+	\draw (7.5, 11.5) to[capacitor, l={$C_f=2.5pF$}, label distance=-0.02cm] (12, 11.5);
+	\draw (12, 11.5) to[short] (12, 6.555);
+	\draw (11.643, 6.555) to[short, l={$V_{TIA}$}, label distance=-0.03cm] (13, 6.555);
+	\draw (13, 6.555) to[short] (13, 5.923);
+	\draw (13, 5.923) to[american resistor, l_={$R_a=1k\Omega$}, label distance=-0.02cm] (17.5, 5.923);
+	\draw (17.5, 5.923) to[short] (18.574, 5.923);
+	\node[op amp, xscale=1.29, yscale=1.29](N2) at (20.109, 6.555){} node[anchor=east] at ([xshift=0.13cm]N2.west){$U1B\,(TLV3542)$};
+	\draw (15, 7.5) to[european potentiometer, l={$R_{pot}=10k\Omega$}] (15, 10.5);
+	\node[tlground] at (15, 7.5){};
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.465cm] at (15, 11){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (14.5, 11.25){+3.3V};
+	\draw (15.25, 9) to[short] (17.5, 9);
+	\draw (17.5, 9) to[short] (17.5, 7.187);
+	\draw (17.5, 7.187) to[short, l={$V_{TH}$}, label distance=-0.03cm] (18.574, 7.187);
+	\draw (16.5, 9) to[capacitor, l={$C_2=100nF$}, label distance=-0.02cm] (16.5, 7.5);
+	\node[tlground] at (16.5, 7.5){};
+	\draw (21.644, 6.555) to[short] (22.15, 6.555);
+	\draw (22.15, 6.555) to[short] (22.15, 3.5);
+	\draw (22.15, 3.5) to[american resistor, l={$R_h=22k\Omega$}, label distance=-0.02cm] (17.5, 3.5);
+	\draw (17.5, 3.5) to[short] (17.5, 5.923);
+	\draw (22.15, 6.555) to[american resistor, l={$R_{out}=47\Omega$}, label distance=-0.02cm] (24.5, 6.555);
+	\draw (24.5, 6.555) to[short] (26, 6.555);
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.465cm] at (13.5, 3.75){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (13, 4){+3.3V};
+	\draw (13.75, 3.25) to[short] (13.75, 3);
+	\draw (13, 3) to[short] (14.5, 3);
+	\draw (13, 3) to[capacitor, l_={$C_{d1}=100nF$}, label distance=-0.02cm] (13, 1);
+	\draw (13, 1) to[short] (14.5, 1);
+	\draw (13.75, 1) to[short] (13.75, 0.5);
+	\node[tlground] at (13.75, 0.5){};
+	\node[shape=rectangle, minimum width=1.965cm, minimum height=0.715cm] at (25.5, 6){} node[anchor=north west, align=left, text width=1.577cm, inner sep=6pt] at (24.5, 6.375){Logic  Out (FPGA)};
+	\draw (14.5, 3) to[curved capacitor, l={$C_{d2}=10\mu F$}] (14.5, 1);
+\end{tikzpicture}
+}
+\caption{Circuit Schematic: Reverse bias BPW34 with a transimpedance amplifier and hysteretic comparator using the dual TLV3542.}
+\label{fig:tia_schmitt}
+\end{figure}
+
+\subsection{Reverse Bias BPW34}
+At zero bias ($V_R = 0\text{ V}$), the BPW34 exhibits a large junction capacitance ($C_D \approx 70\text{ pF}$), which limits speed of detection. Applying a reverse voltage widens the depletion region, reducing $C_D$ to $\sim 25\text{ pF}$ at $V_R = 3\text{ V}$ and accelerating carrier transit time \cite{BPW34}.
+
+In \cref{fig:tia_schmitt}, the BPW34 anode is connected directly to $\text{GND}$ and its cathode is connected to the inverting node (Pin 2) of \texttt{U1A}. The voltage divider $R_1, R_2$ (bypassed by $C_1$) sets the non-inverting input (Pin 3) to:
+\begin{equation}
+    V_{\text{REF}} = V_{CC}\,\frac{R_2}{R_1 + R_2} = 3.3\text{ V} \times \frac{10\,\text{k}\Omega}{4.7\,\text{k}\Omega + 10\,\text{k}\Omega} \approx 2.24\text{ V}
+\end{equation}
+Because negative feedback forces (Pin 2) to match (Pin 3), the photodiode is reverse-biased by $V_R = V_{\text{REF}} \approx 2.24\text{ V}$ ($C_D \approx 28\text{ pF}$).
+
+\subsection{High-Speed Transimpedance Amplifier}
+When light illuminates the BPW34 photocurrent $I_{\text{ph}}$ flows from the cathode (Pin 2) to $\text{GND}$. Since the input of the TLV3542 draws negligible current ($\sim 3\text{ pA}$), this current must flow from \texttt{U1A}'s output (Pin 1) through $R_f$, resulting in a positive output voltage:
+\begin{equation}
+    V_{\text{TIA}} = V_{\text{REF}} + I_{\text{ph}} R_f = 2.24\text{ V} + I_{\text{ph}} R_f
+\end{equation}
+As fringes sweep from dark to bright, $V_{\text{TIA}}$ swings upward from $2.24\text{ V}$ up to $\sim 3.2\text{ V}$. 
+
+With total summing-node capacitance $C_{\text{IN}} = C_D + C_{\text{CM}} + C_{\text{DIFF}} + C_{\text{stray}} \approx 28 + 4 + 2 = 34\text{ pF}$ and effective loop gain-bandwidth $\text{GBW} \approx 100\text{ MHz}$ \cite{TLV354x_Datasheet}, the minimum compensation capacitance required for a maximally flat Butterworth response is
+\begin{equation}
+    C_{f,\min} \approx \sqrt{\frac{C_{\text{IN}}}{2\pi R_f \cdot \text{GBW}}} \approx \sqrt{\frac{34\text{ pF}}{2\pi (10\,\text{k}\Omega)(100\,\text{MHz})}} \approx 2.33\text{ pF}
+\end{equation}
+
+Because $C_f = 2.5\text{ pF}$ sits just above $C_{f,\min}$, the TIA operates in a near-critically-damped (Butterworth-like) regime that suppresses gain peaking and oscillation while achieving a wide $-3\text{ dB}$ bandwidth of
+\begin{equation}
+    f_{-3\text{dB}} = \frac{1}{2\pi R_f C_f} = \frac{1}{2\pi (10\,\text{k}\Omega)(2.5\text{ pF})} \approx 6.37\text{ MHz}
+\end{equation}
+
+\subsection{Noise-Resilient Schmitt Trigger}
+To convert the analog signal $V_{\text{TIA}}$ into a $0\text{ V}$ / $3.3\text{ V}$ digital signal we use \texttt{U1B} as a non-inverting Schmitt trigger \cite[Chap 9.]{francoDesignOperationalAmplifiers2015}. The $10\,\text{k}\Omega$ precision potentiometer $R_{\text{pot}}$ (decoupled by $C_2 = 100\,n\text{F}$) sets the midpoint threshold voltage $V_{\text{TH}}$ on (Pin 6). Positive feedback via $R_a = 1\,\text{k}\Omega$ and $R_h = 22\,\text{k}\Omega$ defines the non-inverting node voltage at (Pin 5) as:
+\begin{equation}
+    V_+ = \frac{R_h V_{\text{TIA}} + R_a V_{\text{OUT}}}{R_a + R_h},
+\end{equation}
+yielding distinct rising and falling switching thresholds:
+\begin{equation}
+    V_{\text{TIA, rise}} = V_{\text{TH}}\left(1 + \frac{R_a}{R_h}\right), \qquad
+    V_{\text{TIA, fall}} = V_{\text{TH}}\left(1 + \frac{R_a}{R_h}\right) - \frac{R_a}{R_h} V_{CC}
+\end{equation}
+The resulting hysteresis window is independent of $V_{\text{TH}}$:
+\begin{equation}
+    \Delta V_{\text{hys}} = V_{\text{TIA, rise}} - V_{\text{TIA, fall}} = \frac{R_a}{R_h} V_{CC} = \frac{1\,\text{k}\Omega}{22\,\text{k}\Omega}(3.3\text{ V}) = 150\text{ mV}
+\end{equation}
+This $150\text{ mV}$ band prevents intensity noise or small optical fluctuations near threshold crossings from generating unwanted transitions, this behavior is shown in \cref{fig:schmitt_behavior}.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[>=Latex, font=\small]
+
+    % =========================================================
+    % Panel (a): Hysteresis Transfer Curve (V_OUT vs V_TIA)
+    % =========================================================
+    \begin{scope}[xshift=0cm, yshift=0cm]
+        % Axes
+        \draw[->, thick] (0.6, 0.8) -- (6.5, 0.8) node[right] {$V_{\text{TIA}}$};
+        \draw[->, thick] (0.8, 0.6) -- (0.8, 4.7) node[above] {$V_{\text{OUT}}$};
+
+        % Y-axis ticks (0 V and 3.3 V)
+        \draw (0.7, 0.98) -- (0.9, 0.98);
+        \node[left, font=\footnotesize] at (0.7, 0.98) {$0\text{ V}$};
+        \draw (0.7, 3.85) -- (0.9, 3.85);
+        \node[left, font=\footnotesize] at (0.7, 3.85) {$3.3\text{ V}$};
+
+        % X-axis threshold ticks (V_TIA,fall and V_TIA,rise)
+        \draw[dashed, gray!70] (2.65, 0.8) -- (2.65, 0.98);
+        \draw[dashed, gray!70] (4.45, 0.8) -- (4.45, 0.98);
+        \node[below, font=\footnotesize] at (2.55, 0.72) {$V_{\text{TIA, fall}}$};
+        \node[below, font=\footnotesize] at (4.55, 0.72) {$V_{\text{TIA, rise}}$};
+
+        % Hysteresis loop (blue thick curve with directional arrows)
+        \draw[very thick, blue!80!black] (1.05, 0.98) -- (4.45, 0.98) -- (4.45, 3.85) -- (6.15, 3.85);
+        \draw[very thick, blue!80!black] (4.45, 3.85) -- (2.65, 3.85) -- (2.65, 0.98);
+
+        % Directional arrows on loop
+        \draw[->, very thick, blue!80!black] (1.9, 0.98) -- (2.15, 0.98);
+        \draw[->, very thick, blue!80!black] (4.45, 2.25) -- (4.45, 2.55);
+        \draw[->, very thick, blue!80!black] (3.7, 3.85) -- (3.45, 3.85);
+        \draw[->, very thick, blue!80!black] (2.65, 2.55) -- (2.65, 2.25);
+
+        % Hysteresis width callout (Delta V_hys = 150 mV)
+        \draw[dashed, gray] (2.65, 3.85) -- (2.65, 4.35);
+        \draw[dashed, gray] (4.45, 3.85) -- (4.45, 4.35);
+        \draw[<->, thick] (2.65, 4.22) -- (4.45, 4.22);
+        \node[above, font=\footnotesize] at (3.55, 4.25) {$\Delta V_{\text{hys}} = 150\text{ mV}$};
+
+        % Panel title
+        \node[font=\small] at (3.55, -0.1) {\textbf{(a)} Hysteresis Transfer Characteristic};
+    \end{scope}
+
+    % =========================================================
+    % Panel (b): Noisy Fringe Input vs Clean Digital Output
+    % =========================================================
+    \begin{scope}[xshift=7.8cm, yshift=0cm]
+        % --- Top Plot: Noisy Analog Input V_TIA(t) ---
+        \draw[->, thick] (0.5, 2.75) -- (7.15, 2.75);
+        \draw[->, thick] (0.5, 2.65) -- (0.5, 4.75) node[above] {$V_{\text{TIA}}(t)$};
+
+        % Shaded hysteresis band between V_TIA,fall (y=3.38) and V_TIA,rise (y=3.92)
+        \fill[gray!15] (0.5, 3.38) rectangle (7.0, 3.92);
+        \draw[dashed, red!75!black, thick] (0.5, 3.92) -- (7.0, 3.92)
+            node[right, font=\footnotesize] {$V_{\text{TIA, rise}}$};
+        \draw[dashed, orange!85!black, thick] (0.5, 3.38) -- (7.0, 3.38)
+            node[right, font=\footnotesize] {$V_{\text{TIA, fall}}$};
+
+        % Noisy sinusoidal fringe waveform
+        \draw[thick, black, smooth] plot[domain=0.55:6.9, samples=220]
+            (\x, {3.65 + 0.82*sin(deg(2.0*(\x - 0.8))) + 0.065*sin(deg(23*\x)) + 0.04*cos(deg(37*\x))});
+
+        % --- Bottom Plot: Clean Digital Output V_OUT(t) ---
+        \draw[->, thick] (0.5, 0.8) -- (7.15, 0.8) node[right] {$t$};
+        \draw[->, thick] (0.5, 0.7) -- (0.5, 2.2) node[above] {$V_{\text{OUT}}(t)$};
+
+        % Y-axis ticks (0 V and 3.3 V)
+        \draw (0.4, 0.98) -- (0.6, 0.98);
+        \node[left, font=\footnotesize] at (0.4, 0.98) {$0\text{ V}$};
+        % \draw (0.4, 2.1) -- (0.6, 2.1);
+        \node[left, font=\footnotesize] at (0.4, 2.02) {$3.3\text{ V}$};
+
+        % Vertical projection lines at exact threshold crossings
+        \draw[dotted, gray!80, thick] (0.97, 3.92) -- (0.97, 0.98);
+        \draw[dotted, gray!80, thick] (2.54, 3.38) -- (2.54, 0.98);
+        \draw[dotted, gray!80, thick] (4.11, 3.92) -- (4.11, 0.98);
+        \draw[dotted, gray!80, thick] (5.68, 3.38) -- (5.68, 0.98);
+
+        % Clean digital output pulse train (to Arty Z7-20)
+        \draw[very thick, blue!80!black]
+            (0.55, 0.98) -- (0.97, 0.98) -- (0.97, 2.02) --
+            (2.54, 2.02) -- (2.54, 0.98) -- (4.11, 0.98) --
+            (4.11, 2.02) -- (5.68, 2.02) -- (5.68, 0.98) -- (6.9, 0.98);
+
+        \node[right, font=\footnotesize, blue!80!black] at (5.8, 2.02) {To FPGA};
+
+        % Panel title
+        \node[font=\small] at (3.85, -0.1) {\textbf{(b)} Noise-Immune Pulse Digitization};
+    \end{scope}
+
+\end{tikzpicture}%
+}
+\caption{Behavior of the non-inverting Schmitt trigger (\texttt{U1B}): (a) voltage transfer characteristic showing the $150\text{ mV}$ hysteresis window; (b) Conversion of a noisy signal $V_{\text{TIA}}(t)$ into a clean $0\text{ V}$/$3.3\text{ V}$ digital pulse for the FPGA.}
+\label{fig:schmitt_behavior}
+\end{figure}
