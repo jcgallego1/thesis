@@ -5,16 +5,16 @@ A Field Programmable Gate Array (FPGA) is an integrated circuit designed to be c
 
 In the context of Digital Signal Processing (DSP), the importance of FPGAs originates from their ability to exploit hardware-level parallelism. As noted by \cite[pp. 1--14]{FPGAbasedImplementationSignal2008}, many DSP algorithms such as Finite Impulse Response (FIR) filters, Fast Fourier Transforms (FFT), and matrix operations are inherently repetitive and computationally intensive. While a standard CPU would process these samples one by one, an FPGA can implement dedicated hardware pipelines that process multiple data points simultaneously. This results in significantly higher throughput and deterministic latency, which are critical requirements for real-time physics instrumentation and high-frequency data acquisition.
 
-\todo[inline]{also talk about specific one used (arty z7-20) \cite{ArtyZ7Reference} and its relevant specs in the project like the ADC and maybe why it would be better to change it for an external one. Talk about the PS and PL logic}
-
-\todo[inline]{talk about the addition of PS in the boards and why it is important and necesary}
-
-
-
-
 \subsection{Communication Interfaces}
+\label{sec:communication_interfaces}
 
-\todo[inline]{Explain AXI protocols to understand a little bit why it is important to introduce an IP like the comblock or later a complete workflow with DMA, UDMA and HOG.}
+On System-on-Chip (SoC) FPGAs such as the Xilinx Zynq-7000, high-speed, deterministic hardware logic such as fringe edge detection, event counting, and nanosecond timestamping resides in the Programmable Logic (\texttt{PL}), whereas system orchestration, memory management, and host-PC communication reside in the ARM Cortex-A9 Processing System (\texttt{PS}). Bridging these two domains relies on the \textbf{AMBA AXI4} (\textit{Advanced eXtensible Interface 4}) bus standard, which provides three specialized interface variants:
+\begin{itemize}
+    \item \textbf{AXI4-Lite:} A lightweight, memory-mapped, single-beat ($32$-bit) transaction bus intended for low-throughput control and status registers.
+    \item \textbf{AXI4 (Full):} A high-performance, memory-mapped interface supporting burst transfers (up to $256$ bits per address transaction) for efficient block-memory or external \texttt{DDR3} access.
+    \item \textbf{AXI4-Stream:} Addressless streaming protocol (\texttt{TDATA}, \texttt{TVALID}, \texttt{TREADY}, \texttt{TLAST}) designed for continuous, single-cycle unidirectional data pipelines without memory-addressing overhead.
+\end{itemize}
+While AXI4 provides high performance and interoperability, implementing compliant AXI finite-state machines, burst controllers, clock-domain-crossing (\texttt{CDC}) bridges, and matching \texttt{PS} software drivers from scratch for each custom \texttt{PL} module introduces substantial development and verification overhead.
 
 
 \subsection{Comblock} \label{sec:comblock}
@@ -30,14 +30,21 @@ The primary objective of the ComBlock is to provide a Hardware Abstraction Layer
 
 
 \begin{figure}
-    \includegraphics[width=12cm]{images/comblock.png}
+    \begin{center}
+        \includegraphics[width=12cm]{images/comblock.png}
+    \end{center}
     \caption{Comblock schematic taken from \cite{FilesMasterRodrigo2021}}
     \label{fig:comblock_schematic}
 \end{figure}
 
 The integration of the ComBlock into a Vivado design follows a Plug-and-Play methodology within the IP Integrator environment. Once added to the Block Design, the ComBlock is connected to the Zynq Processing System through the AXI Interconnect, this task can be done automatically with the Vivado-IDE functions.
 
-\todo[inline]{maybe explain a little bit more in detail an example??}
+\begin{itemize}
+    \item \textbf{Input and Output Registers:} Up to $32$ registers per direction for configuration parameters (e.g., enabling/resetting acquisition) and instantaneous status readout (e.g., cumulative fringe counts).
+    \item \textbf{Asynchronous Input and Output FIFOs:} Buffered streaming channels built on internal Block RAM (\texttt{BRAM}) that safely transfer multi-bit event records or fringe timestamps across independent \texttt{PL}/\texttt{PS} clock domains.
+    \item \textbf{True Dual-Port RAM (\texttt{TDPRAM}):} Shared memory accessible asynchronously by both the \texttt{PL} hardware and the \texttt{PS} processor.
+\end{itemize}
+By hiding the underlying AXI protocol complexity, the ComBlock enables the interferometer logic to connect directly via simple register and true dual RAM ports.
 
 
 \subsection{PYNQ}
@@ -54,11 +61,6 @@ This approach simplifies FPGA usage in three key ways:
 \item \textbf{Ecosystem Integration:} Because the data resides in a Python environment, it can be passed directly to scientific libraries such as \textit{NumPy}, \textit{Pandas}, and \textit{Matplotlib}. For numerical processing, for data management, and real-time visualization.
 \item \textbf{Rapid Prototyping:} The use of Jupyter Notebooks allows for an interactive development workflow. Researchers can test hardware triggers, adjust acquisition parameters, and analyze data in a single, documented environment, significantly reducing development time.
 \end{itemize}
-
-
-
-\todo[inline, color=orange]{PYNQ usage examples high level and addition of section explaining how the image works in the board} 
-
 
 \subsection{HDL on Git (Hog)}
 The management of FPGA projects within traditional version control systems present significant challenges. Tools like AMD Vivado used for the design of the FPGA typically generate large binary project files that are not suited for line-by-line differencing. Furthermore, these tools frequently rely on absolute paths and local environment configurations, which severely hinders the ability to compile in a different machine without substantial changes to the codebase. This complicates the ability of multiple researchers to collaborate on a shared codebase without encountering conflicts. To overcome these limitations, the Hog(HDL on Git) framework \cite{HogHogGitLab2026} was developed, primarily at the European Organization for Nuclear Research (CERN), to provide a structured, Tcl-based methodology for handling HDL code within Git repositories. 
@@ -77,10 +79,142 @@ Hog improves replicability, it ensures that any researcher can clone an open-har
 
 
 \subsection{Comblock API for PYNQ} \label{sec:comblock_API}
-Show the API created and the repo, how it simplifies the workflow and what good practices (HOG) are implemented for better usability. 
+\label{sec:comblock_pynq_api}
 
-\todo[inline]{make a diagram showing the working flow of the API}
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    layer/.style={draw, rounded corners=5pt, align=center, inner sep=6pt},
+    card/.style={draw, rounded corners=4pt, align=center, inner sep=5pt, fill=white},
+]
+
+    % =========================================================
+    % Layer 1: User Application (PYNQ / Jupyter)
+    % =========================================================
+    \node[layer, fill=blue!8, draw=blue!65!black, thick,
+          minimum width=14.2cm, minimum height=1.2cm] (user_app) at (7.5, 10.7) {
+        \textbf{\color{blue!65!black}User Application Layer (PYNQ / Jupyter Notebook)}\\[3pt]
+        \footnotesize High-level Python control \& NumPy data analysis (no raw memory addresses)
+    };
+
+    % =========================================================
+    % Layer 2: Comblock_API_for_PYNQ Abstraction Layer
+    % =========================================================
+    \draw[layer, fill=teal!6, draw=teal!70!black, very thick]
+        (0.4, 6.2) rectangle (14.6, 9.2);
+    \node[font=\small\bfseries, text=teal!70!black] at (7.5, 8.82)
+        {\texttt{Comblock\_API\_for\_PYNQ} (Driver Abstraction Layer)};
+
+    \node[card, draw=teal!65!black, thick,
+          minimum width=4.3cm, minimum height=1.8cm] (card_reg) at (2.6, 7.45) {
+        \textbf{Registers}\\[3pt]
+        \footnotesize Control \& status\\
+        \footnotesize \textit{(bounds \& R/W safe)}
+    };
+
+    \node[card, draw=teal!65!black, thick,
+          minimum width=4.3cm, minimum height=1.8cm] (card_fifo) at (7.5, 7.45) {
+        \textbf{FIFOs}\\[3pt]
+        \footnotesize Buffered streaming\\
+        \footnotesize \textit{(status \& bulk NumPy I/O)}
+    };
+
+    \node[card, draw=teal!65!black, thick,
+          minimum width=4.3cm, minimum height=1.8cm] (card_dram) at (12.4, 7.45) {
+        \textbf{DRAM}\\[3pt]
+        \footnotesize Shared block memory\\
+        \footnotesize \textit{(fast NumPy slicing)}
+    };
+
+    % =========================================================
+    % Layer 3: PYNQ MMIO & AXI4 Buses (PS <-> PL)
+    % =========================================================
+    \node[layer, fill=orange!10, draw=orange!75!black, thick,
+          minimum width=9.2cm, minimum height=1.15cm] (bus_lite) at (5.05, 4.65) {
+        \textbf{\color{orange!75!black}PYNQ \texttt{MMIO} \& AXI4-Lite Bus}\\[2pt]
+        \footnotesize 32-bit register \& FIFO transfers (PS $\leftrightarrow$ PL)
+    };
+
+    \node[layer, fill=orange!10, draw=orange!75!black, thick,
+          minimum width=4.3cm, minimum height=1.15cm] (bus_full) at (12.4, 4.65) {
+        \textbf{\color{orange!75!black}AXI4-Full Bus}\\[2pt]
+        \footnotesize Burst memory transfers
+    };
+
+    % =========================================================
+    % Layer 4: ICTP ComBlock IP Core (PL)
+    % =========================================================
+    \draw[layer, fill=violet!8, draw=violet!70!black, thick]
+        (0.4, 1.85) rectangle (14.6, 3.35);
+    \node[font=\small\bfseries, text=violet!70!black] at (7.5, 3.0)
+        {ICTP ComBlock IP Core (Programmable Logic)};
+
+    \node[card, draw=violet!50, minimum width=4.3cm, minimum height=0.72cm]
+        at (2.6, 2.32) {\footnotesize Async I/O Registers};
+    \node[card, draw=violet!50, minimum width=4.3cm, minimum height=0.72cm]
+        at (7.5, 2.32) {\footnotesize Async BRAM FIFOs};
+    \node[card, draw=violet!50, minimum width=4.3cm, minimum height=0.72cm]
+        at (12.4, 2.32) {\footnotesize Dual-Port RAM};
+
+    % =========================================================
+    % Layer 5: Custom Interferometer Gateware (Arty Z7-20 PL)
+    % =========================================================
+    \node[layer, fill=gray!12, draw=gray!70!black, thick,
+          minimum width=14.2cm, minimum height=1.15cm] (pl_logic) at (7.5, 0.55) {
+        \textbf{Interferometer Acquisition Logic (Arty Z7-20 PL)}\\[3pt]
+        \footnotesize Photodiode Digital Input $\rightarrow$ Synchronizer \& Edge Counter $\rightarrow$ Fringe Data
+    };
+
+    % =========================================================
+    % Clean Vertical Arrows Between Layers
+    % =========================================================
+    % Layer 1 <-> Layer 2
+    \draw[<->, thick, blue!60!black] (2.6, 9.2) -- (2.6, 10.1);
+    \draw[<->, thick, blue!60!black] (7.5, 9.2) -- (7.5, 10.1);
+    \draw[<->, thick, blue!60!black] (12.4, 9.2) -- (12.4, 10.1);
+
+    % Layer 2 <-> Layer 3
+    \draw[<->, thick, teal!70!black] (2.6, 5.23) -- (2.6, 6.2);
+    \draw[<->, thick, teal!70!black] (7.5, 5.23) -- (7.5, 6.2);
+    \draw[<->, thick, teal!70!black] (12.4, 5.23) -- (12.4, 6.2);
+
+    % Layer 3 <-> Layer 4
+    \draw[<->, thick, orange!75!black] (2.6, 3.35) -- (2.6, 4.07);
+    \draw[<->, thick, orange!75!black] (7.5, 3.35) -- (7.5, 4.07);
+    \draw[<->, thick, orange!75!black] (12.4, 3.35) -- (12.4, 4.07);
+
+    % Layer 4 <-> Layer 5
+    \draw[<->, thick, violet!70!black] (2.6, 1.13) -- (2.6, 1.85);
+    \draw[<->, thick, violet!70!black] (7.5, 1.13) -- (7.5, 1.85);
+    \draw[<->, thick, violet!70!black] (12.4, 1.13) -- (12.4, 1.85);
+
+\end{tikzpicture}%
+}
+\caption{High-level layered architecture of Comblock API for PYNQ \cite{gallegoJcgallego1Comblock_API_for_PYNQ2026}, bridging Python analysis scripts to the interferometer PL gateware via safe register, FIFO, and DRAM abstractions.}
+\label{fig:comblock_api_arch}
+\end{figure}
 
 
-\cite{gallegoJcgallego1Comblock_API_for_PYNQ2026}
+
+Although the ICTP ComBlock eliminates custom AXI finite-state machines on the Programmable Logic (\texttt{PL}) side, interacting with it directly from the Zynq Processing System (\texttt{PS}) using raw memory-mapped I/O (\texttt{MMIO}) still exposes low-level hardware details to the user. Without an abstraction driver, Python scripts must calculate byte-aligned hexadecimal register offsets manually, perform bitwise masking and shifting to interpret FIFO status flags, and enforce array bounds by hand—increasing the risk of silent data corruption, FIFO overflows/underflows, or accidental writes to read-only hardware registers.
+
+To eliminate these low-level error modes and bridge the ComBlock cleanly into the PYNQ ecosystem, a dedicated object-oriented Python driver (Comblock API for PYNQ) was implemented \cite[Repository]{gallegoJcgallego1Comblock_API_for_PYNQ2026}. Built on top of PYNQ's DefaultIP class, the Comblock driver inspects the Vivado hardware handoff (\texttt{.hwh}) metadata when an overlay is loaded and automatically binds to the IP core instance (e.g., \texttt{cb = overlay.comblock\_0}). Rather than exposing flat memory addresses, it organizes the hardware into three specialized sub-interfaces:
+
+\begin{itemize}
+    \item \textbf{\texttt{Register} Interface (\texttt{IN\_REGS}, \texttt{OUT\_REGS}):} Provides boundary-checked \texttt{read(offset)} and \texttt{write(offset, value)} operations for 32-bit AXI4-Lite registers. Out-of-bounds indices raise \texttt{IndexError}, while write attempts to read-only input registers raise \texttt{PermissionError}, preventing invalid bus accesses.
+    \item \textbf{\texttt{Fifo} Interface (\texttt{FIFO\_IN}, \texttt{FIFO\_OUT}):} Decodes raw hardware status bitmasks via \texttt{get\_status()} into a readable Python dictionary (\texttt{occupancy}, \texttt{empty}, \texttt{full}, \texttt{almost\_empty}, \texttt{almost\_full}, \texttt{underflow}, and \texttt{overflow}). High-throughput \texttt{read\_bulk()} and \texttt{write\_bulk()} methods transfer blocks directly to and from NumPy arrays while guarding against buffer overflows/underflows (\texttt{RuntimeError}), and \texttt{reset()} safely flushes pending entries.
+    \item \textbf{\texttt{Dram} Interface (\texttt{DRAM}):} Exposes AXI4-Full shared memory through vectorized \texttt{read\_bulk(offset, count)} and \texttt{write\_bulk(offset, data)} calls backed by NumPy slicing for fast block transfers.
+\end{itemize}
+
+\paragraph{Significance for the Interferometer Acquisition System.}
+Introducing \texttt{Comblock\_API\_for\_PYNQ} provides three decisive advantages for experimental operation (\cref{fig:comblock_api_arch}):
+\begin{enumerate}
+    \item \textbf{Hardware-Safe Experimentation:} Automatic bounds, permission, and FIFO-occupancy checks prevent illegal hardware states during interactive Jupyter Notebook sessions, allowing rapid reconfiguration of gating, resets, and readout intervals without crashing the AXI bus.
+    \item \textbf{Direct Scientific Computing Integration:} By returning NumPy arrays directly from \texttt{FIFO\_IN.read\_bulk()} and \texttt{DRAM.read\_bulk()}, captured fringe counts and nanosecond timestamps feed seamlessly into Python analysis routines (velocity reconstruction, spectral analysis, and visualization) without slow per-sample Python loops.
+    \item \textbf{Decoupled Software–Gateware Maintenance:} Application scripts reference semantic methods (such as \texttt{cb.IN\_REGS.read(0)}) rather than hardcoded hexadecimal addresses, keeping host software portable across different Zynq boards.
+\end{enumerate}
+
 

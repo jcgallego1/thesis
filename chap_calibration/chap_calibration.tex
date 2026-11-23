@@ -1,7 +1,56 @@
 \chapter{Calibration and Methodology}
 
-\section{Openflexure overview and data}
+\section{Interference Pattern}
+\label{sec:pattern_obtained}
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/pattern_2mm_back_compressed.jpg}
+        \caption{Pattern 2mm}
+        \label{fig:pattern_2mm_back_a}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/pattern_4mm_back_compressed.jpg}
+        \caption{Pattern 4mm}
+        \label{fig:pattern_2mm_back_b}
+    \end{subfigure}
+    \caption{Interference pattern obtained from the interferometer through a piece of paper as objective. a) Interferometer at 2 mm of the objective; b) Interferometer at 4 mm of the objective.}
+    \label{fig:patterns_back}
+\end{figure}
+
+
+
+\Cref{fig:patterns_back} shows the experimental interference patterns projected onto a millimeter-ruled paper screen at screen distances of $2\text{ mm}$ and $4\text{ mm}$ from the interferometer output. In both configurations, at the center the fringes are approximate parallel to each other and at the borders start to catch on the characteristic curvature from Michelson interferometer fringes, this has to do with the alignment of the optical components and the lens positioning offset with respect to the optical axis.
+
+\subsubsection{Irradiance Comparison Against the Theoretical Michelson Model}
+\label{sec:michelson_irradiance_comparison}
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=15cm]{images/michelson_comparison_big.png}
+    \end{center}
+    \caption{Experimental vs Theoretical Michelson Irradiance}
+    \label{fig:michelson_comparison}
+\end{figure}
+
+To verify that the interference pattern captured by the Logitech C270 sensor adheres to classical two-beam interferometry \cref{fig:michelson_comparison}, a full frame spatial irradiance analysis was performed on the red channel of the camera, with a laser of ($\lambda = 632.8\text{ nm}$). At the selected capture resolution of $640 \times 480\text{ px}$, the C270 has an effective sensor-plane spatial scale of $5.6\ \mu\text{m/px}$ ($3.58\text{ mm} \times 2.69\text{ mm}$ active field of view). Pixel intensities are recorded in 8-bit Digital Numbers ($\text{DN} \in [0, 255]$), representing raw quantized levels from the camera's analog to digital converter.
+
+The theoretical spatial irradiance of an ideal two-beam Michelson interferometer is given by
+\begin{equation}
+    I_{\text{theo}}(x, y) = I_1 + I_2 + 2\sqrt{I_1 I_2}\,\cos(k_x x + k_y y + \phi_0)
+    = I_0\left[1 + V\cos\!\left(\frac{2\pi}{\Lambda}\,u + \phi_0\right)\right]
+    \label{eq:michelson_spatial}
+\end{equation}
+where $I_0 = I_1 + I_2$ is the mean background irradiance, $V = \frac{2\sqrt{I_1 I_2}}{I_1 + I_2} \in [0, 1]$ is the fringe visibility, $\Lambda$ is the spatial fringe period, and $u = x\cos\theta + y\sin\theta$ is the coordinate perpendicular to the fringe orientation $\theta = \arctan2(k_y, k_x)$.
+
+First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifies the dominant fringe wavevector $(k_x, k_y)$ across the full $640 \times 480$ frame. All image pixels are then projected onto the $u$-axis and averaged along the fringe direction to suppress random laser speckle, obtaining an experimental profile $I_{\text{exp}}(u)$ along with its spatial standard deviation $\pm 1\sigma(u)$. Fitting \cref{eq:michelson_spatial} to $I_{\text{exp}}(u)$ via nonlinear least squares extracts $(I_0, V, \Lambda, \phi_0)$ directly from the experimental data without assuming ideal unit contrast. For instance, an experimentally fitted visibility of $V \approx 0.43$ reflects practical sources of error such as slight beam-splitter optical beam paths imbalance ($I_2/I_1$), laser speckle grains, and partial spatial/temporal coherence effects.
+
+Overall, the strong correlation and low relative root-mean-square error ($\text{RMSE}$ relative to $I_0$) confirm that the optical setup produces clean Michelson interference.
+
+\section{Openflexure overview and data}
 
 
 \section{Designs for coupling and modularity and low cost}
