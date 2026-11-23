@@ -50,7 +50,56 @@ First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifie
 
 Overall, the strong correlation and low relative root-mean-square error ($\text{RMSE}$ relative to $I_0$) confirm that the optical setup produces clean Michelson interference.
 
-\section{Openflexure overview and data}
+
+\section{Openflexure Calibration Results and Kinematic Analysis}
+\label{sec:calibration_results}
+
+To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite{mengOpenFlexureBlockStage2020}, bidirectional calibration sweeps were performed across five-step counts ($N \in \{1000, 1500, \\ 2000, 2500, 3000\}$) in both positive and negative directions, each sweep for step size was measured 5 times, at a commanded cruise speed of $55\text{ steps/s}$ and acceleration of $150\text{ steps/s}^2$, recorded at $29.0\text{ fps}$ (\cref{fig:openflexure_cal,fig:single_run_1000}).
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=15cm]{images/openflexure_calibration.png}
+    \end{center}
+    \caption{Openflexure calibration of step size.}
+    \label{fig:openflexure_cal}
+\end{figure}
+
+\subsubsection{Definition of Plot Metrics}
+\begin{itemize}
+    \item \textbf{Nominal CAD ($12.2\text{ nm/step}$):} Here, \textbf{CAD} stands for \textit{Computer-Aided Design}. This dotted reference line represents the idealized theoretical step size derived from the Block Stage geometric design assuming zero backlash, rigid plastic links, exact M3 lead-screw pitch ($0.5\text{ mm/rev}$), $2:1$ external gear reduction, $4096$ half-steps/rev on the 28BYJ-48 motor, and the $5:1$ flexure lever reduction ($\approx 12.2\text{ nm/step}$) \cite{mengOpenFlexureBlockStage2020}.
+    \item \textbf{Run Average ($s_{\text{avg}}$):} The global effective step size over an entire sweep, computed as $s_{\text{avg}} = \Delta x_{\text{total}} / N$, where $\Delta x_{\text{total}} = m\,\frac{\lambda}{2}$ ($316.4\text{ nm/fringe}$ at $\lambda = 632.8\text{ nm}$). Because $s_{\text{avg}}$ divides total displacement by total commanded steps, it includes any startup deadband, stiction, and deceleration losses.
+    \item \textbf{Instantaneous Step Size:} Computed from the frame interval $\Delta f$ between consecutive peaks (or troughs) as $s_{\text{inst}} = \frac{(\text{FPS}/\Delta f)\,(\lambda/2)}{v_{\text{cmd}}}$, showing how the effective mechanical sensitivity evolves over the duration of a single sweep.
+    \item \textbf{Cruise Plateau ($s_{\text{cruise}}$):} The median of the upper $40\%$ fastest fringe intervals during a sweep, isolating the steady-state motion regime once the motor has overcome initial static friction and gearbox take-up.
+\end{itemize}
+
+
+
+\subsubsection{Single-Run Dynamic Behavior}
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=14cm]{images/55_150_positive_1000_analysis.png}
+    \end{center}
+    \caption{Openflexure calibration of step size (1000 steps single run).}
+    \label{fig:single_run_1000}
+\end{figure}
+
+\cref{fig:single_run_1000} illustrates a complete $1000$-step positive sweep after preloading. Across the trimmed active window, the algorithm detects $26$ peaks and $27$ troughs, yielding $26.63$ fringes ($\Delta x = 8.43\ \mu\text{m}$) and a global run average of $s_{\text{avg}} = 8.43\text{ nm/step}$ ($37.5\text{ steps/fringe}$). Three distinct physical phases appear in the instantaneous step-size curve (bottom panel):
+\begin{enumerate}
+    \item \textbf{Breakaway and Ramp-Up (Frames $180\text{--}210$):} The effective step size starts near $7.0\text{ nm/step}$ and rises rapidly as the motor accelerates ($55/150 \approx 0.37\text{ s}$) and overcomes initial static friction in the gear train and M3 nut.
+    \item \textbf{Steady-State Cruise Plateau (Frames $210\text{--}570$):} The stage settles into uniform periodic motion around a cruise median of $s_{\text{cruise}} = 10.43\text{ nm/step}$ (hovering between $8.8$ and $11.9\text{ nm/step}$).
+    \item \textbf{Deceleration and Relaxation (Frames $575\text{--}675$):} Once the motor finishes its $1000$ steps and de-energizes its coils, the fringe period widens smoothly and $s_{\text{inst}}$ tapers down toward $2.4\text{ nm/step}$ as the 3D-printed PLA flexure relaxes mechanically. This transient startup/stopping overhead explains why $s_{\text{avg}} = 8.43\text{ nm/step}$ lies below $s_{\text{cruise}} = 10.43\text{ nm/step}$.
+\end{enumerate}
+
+\subsubsection{Linear Regression and Bidirectional Symmetry}
+\cref{fig:openflexure_cal}(a) plots total measured displacement $\Delta x$ against commanded steps $N \in \{1000, 1500, 2000, 2500, 3000\}$, with $n = 5$ repeated trials per step count in each direction ($25$ runs per direction, error bars indicating $\pm 1\sigma$ trial-to-trial standard deviation). Linear least-squares fits across all runs reveal strong linearity in both actuation directions:
+\begin{align}
+    \text{Positive direction:}\quad s_+ &= 11.80 \pm 0.28\text{ nm/step} \quad (R^2 = 0.9875), \\
+    \text{Negative direction:}\quad s_- &= 11.67 \pm 0.69\text{ nm/step} \quad (R^2 = 0.9249).
+\end{align}
+Both calibrated incremental slopes agree closely with the $12.2\text{ nm/step}$ nominal CAD value within experimental uncertainty (differing by only $3.3\%\text{--}4.3\%$) and agree with each other within $\sim 1.1\%$, confirming consistent bidirectional sensitivity once preloaded. The negative direction exhibits slightly larger run-to-run dispersion ($\pm 0.69\text{ nm/step}$ and wider $\pm 1\sigma$ error bars at $N = 1500$ and $2500$) than the positive direction ($\pm 0.28\text{ nm/step}$), reflecting minor mechanical asymmetry between pushing against and relaxing with the PLA flexure restoring force and gear mesh. Crucially, both regressions share a small negative $y$-intercept ($\approx -1.4\text{ to }-1.5\ \mu\text{m}$), capturing a nearly constant startup loss prior to rigid engagement. Because this startup offset is absorbed into the intercept rather than the slope, multi-step linear regression accurately recovers the true incremental stage sensitivity ($\sim 11.7\text{--}11.8\text{ nm/step}$) even when single-run averages are pulled down at shorter travels ($N = 1000$).
+
+Finally, \cref{fig:openflexure_cal}(b) compares the grouped mean values ($\pm 1\sigma$, $n = 5$) of $s_{\text{avg}}$ and $s_{\text{cruise}}$ across each step count and direction. As expected, $s_{\text{avg}}$ climbs steadily toward $\sim 11\text{--}11.5\text{ nm/step}$ for larger step counts ($1500\text{--}3000$ steps) as the initial compliance transient becomes proportionally smaller relative to total travel. Meanwhile, the $s_{\text{cruise}}$ averages consistently sit slightly above the $12.2\text{ nm/step}$ nominal line ($\sim 13\text{--}16\text{ nm/step}$, with individual runs peaking near $\sim 20.8\text{ nm/step}$); this occurs because taking the upper $40\%$ fastest intervals biases toward integer-frame rounding at smaller $\Delta f$ ($29.0\text{ fps}$) and captures brief elastic spring-forward bursts immediately following static friction breakaway, alongside minor tooth-to-tooth variability in the printed gear mesh.
 
 
 \section{Designs for coupling and modularity and low cost}

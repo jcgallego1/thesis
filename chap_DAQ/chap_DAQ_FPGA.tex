@@ -198,7 +198,6 @@ Hog improves replicability, it ensures that any researcher can clone an open-har
 \end{figure}
 
 
-
 Although the ICTP ComBlock eliminates custom AXI finite-state machines on the Programmable Logic (\texttt{PL}) side, interacting with it directly from the Zynq Processing System (\texttt{PS}) using raw memory-mapped I/O (\texttt{MMIO}) still exposes low-level hardware details to the user. Without an abstraction driver, Python scripts must calculate byte-aligned hexadecimal register offsets manually, perform bitwise masking and shifting to interpret FIFO status flags, and enforce array bounds by hand—increasing the risk of silent data corruption, FIFO overflows/underflows, or accidental writes to read-only hardware registers.
 
 To eliminate these low-level error modes and bridge the ComBlock cleanly into the PYNQ ecosystem, a dedicated object-oriented Python driver (Comblock API for PYNQ) was implemented \cite[Repository]{gallegoJcgallego1Comblock_API_for_PYNQ2026}. Built on top of PYNQ's DefaultIP class, the Comblock driver inspects the Vivado hardware handoff (\texttt{.hwh}) metadata when an overlay is loaded and automatically binds to the IP core instance (e.g., \texttt{cb = overlay.comblock\_0}). Rather than exposing flat memory addresses, it organizes the hardware into three specialized sub-interfaces:
