@@ -30,7 +30,7 @@
 
 \begin{figure}
     \begin{center}
-        \includegraphics[width=15cm]{images/michelson_comparison_big.png}
+        \includegraphics[width=15cm]{images/michelson_comparison.png}
     \end{center}
     \caption{Experimental vs Theoretical Michelson Irradiance}
     \label{fig:michelson_comparison}
@@ -46,7 +46,7 @@ The theoretical spatial irradiance of an ideal two-beam Michelson interferometer
 \end{equation}
 where $I_0 = I_1 + I_2$ is the mean background irradiance, $V = \frac{2\sqrt{I_1 I_2}}{I_1 + I_2} \in [0, 1]$ is the fringe visibility, $\Lambda$ is the spatial fringe period, and $u = x\cos\theta + y\sin\theta$ is the coordinate perpendicular to the fringe orientation $\theta = \arctan2(k_y, k_x)$.
 
-First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifies the dominant fringe wavevector $(k_x, k_y)$ across the full $640 \times 480$ frame. All image pixels are then projected onto the $u$-axis and averaged along the fringe direction to suppress random laser speckle, obtaining an experimental profile $I_{\text{exp}}(u)$ along with its spatial standard deviation $\pm 1\sigma(u)$. Fitting \cref{eq:michelson_spatial} to $I_{\text{exp}}(u)$ via nonlinear least squares extracts $(I_0, V, \Lambda, \phi_0)$ directly from the experimental data without assuming ideal unit contrast. For instance, an experimentally fitted visibility of $V \approx 0.43$ reflects practical sources of error such as slight beam-splitter optical beam paths imbalance ($I_2/I_1$), laser speckle grains, and partial spatial/temporal coherence effects.
+First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifies the dominant fringe wavevector $(k_x, k_y)$ across the full $640 \times 480$ frame. All image pixels are then projected onto the $u$-axis and averaged along the fringe direction to suppress random laser speckle, obtaining an experimental profile $I_{\text{exp}}(u)$ along with its spatial standard deviation $\pm 1\sigma(u)$. Fitting \cref{eq:michelson_spatial} to $I_{\text{exp}}(u)$ via nonlinear least squares extracts $(I_0, V, \Lambda, \phi_0)$ directly from the experimental data without assuming ideal unit contrast. For instance, an experimentally fitted visibility of $V \approx 0.45$ reflects practical sources of error such as slight beam-splitter optical beam paths imbalance ($I_2/I_1$), laser speckle grains, and partial spatial/temporal coherence effects.
 
 Overall, the strong correlation and low relative root-mean-square error ($\text{RMSE}$ relative to $I_0$) confirm that the optical setup produces clean Michelson interference.
 
@@ -100,6 +100,71 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
 Both calibrated incremental slopes agree closely with the $12.2\text{ nm/step}$ nominal CAD value within experimental uncertainty (differing by only $3.3\%\text{--}4.3\%$) and agree with each other within $\sim 1.1\%$, confirming consistent bidirectional sensitivity once preloaded. The negative direction exhibits slightly larger run-to-run dispersion ($\pm 0.69\text{ nm/step}$ and wider $\pm 1\sigma$ error bars at $N = 1500$ and $2500$) than the positive direction ($\pm 0.28\text{ nm/step}$), reflecting minor mechanical asymmetry between pushing against and relaxing with the PLA flexure restoring force and gear mesh. Crucially, both regressions share a small negative $y$-intercept ($\approx -1.4\text{ to }-1.5\ \mu\text{m}$), capturing a nearly constant startup loss prior to rigid engagement. Because this startup offset is absorbed into the intercept rather than the slope, multi-step linear regression accurately recovers the true incremental stage sensitivity ($\sim 11.7\text{--}11.8\text{ nm/step}$) even when single-run averages are pulled down at shorter travels ($N = 1000$).
 
 Finally, \cref{fig:openflexure_cal}(b) compares the grouped mean values ($\pm 1\sigma$, $n = 5$) of $s_{\text{avg}}$ and $s_{\text{cruise}}$ across each step count and direction. As expected, $s_{\text{avg}}$ climbs steadily toward $\sim 11\text{--}11.5\text{ nm/step}$ for larger step counts ($1500\text{--}3000$ steps) as the initial compliance transient becomes proportionally smaller relative to total travel. Meanwhile, the $s_{\text{cruise}}$ averages consistently sit slightly above the $12.2\text{ nm/step}$ nominal line ($\sim 13\text{--}16\text{ nm/step}$, with individual runs peaking near $\sim 20.8\text{ nm/step}$); this occurs because taking the upper $40\%$ fastest intervals biases toward integer-frame rounding at smaller $\Delta f$ ($29.0\text{ fps}$) and captures brief elastic spring-forward bursts immediately following static friction breakaway, alongside minor tooth-to-tooth variability in the printed gear mesh.
+
+\subsection{Digital Pulse Integrity Validation via LED PWM}
+\label{sec:led_pwm_validation}
+
+To validate the complete FPGA DAQ chain:  photodiode, TIA and Schmitt trigger, FPGA input and ComBlock memory interface prior to interferometer measurements, a controlled pulsed-light characterization was conducted using a red LED ($625\text{--}660\text{ nm}$) driven by an ESP32 hardware timer burst sweep. The FPGA sampled the digitized comparator output continuously at $f_s = 50\text{ MHz}$ ($\Delta t = 20\text{ ns}$). Characterization was evaluated across eleven frequency steps spanning more than four orders of magnitude, from $100\text{ Hz}$ up to $2\text{ MHz}$ (\cref{fig:led_pwm_sweep} and \cref{tab:led_pwm_results}).
+
+
+
+\begin{table}
+\centering
+\caption{Summary of FPGA-measured pulse metrics across the LED PWM sweep ($f_s = 50\text{ MHz}$).}
+\label{tab:led_pwm_results}
+\begin{tabular}{cccccc}
+\hline
+$f_{\text{set}}$ & $f_{\text{meas}}$ & Pulses ($N$) & Missed & Duty Cycle & $\sigma_T$ [ns] \\
+\hline
+$100\text{ Hz}$  & $100.00\text{ Hz}$  & $40$   & $0$ & $50.00\%$ & $8.4$ \\
+$500\text{ Hz}$  & $500.00\text{ Hz}$  & $90$   & $0$ & $50.00\%$ & $8.6$ \\
+$1\text{ kHz}$   & $1.00\text{ kHz}$   & $190$  & $0$ & $50.00\%$ & $6.7$ \\
+$5\text{ kHz}$   & $5.00\text{ kHz}$   & $490$  & $0$ & $50.01\%$ & $4.6$ \\
+$10\text{ kHz}$  & $10.00\text{ kHz}$  & $989$  & $0$ & $50.02\%$ & $3.8$ \\
+$50\text{ kHz}$  & $50.00\text{ kHz}$  & $1981$ & $0$ & $50.10\%$ & $3.9$ \\
+$100\text{ kHz}$ & $100.00\text{ kHz}$ & $1971$ & $0$ & $50.20\%$ & $4.3$ \\
+$250\text{ kHz}$ & $250.00\text{ kHz}$ & $2442$ & $0$ & $50.50\%$ & $4.4$ \\
+$500\text{ kHz}$ & $500.00\text{ kHz}$ & $2777$ & $0$ & $51.00\%$ & $4.4$ \\
+$1\text{ MHz}$   & $1.00\text{ MHz}$   & $2803$ & $0$ & $52.00\%$ & $4.7$ \\
+$2\text{ MHz}$   & $2.00\text{ MHz}$   & $3615$ & $0$ & $56.00\%$ & $6.0$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Variable Pulse Counts for Calibration ($N$)}
+The number of analyzed pulses reported in \cref{tab:led_pwm_results} is deliberately non-uniform across frequencies, governed by two experimental design criteria:
+\begin{enumerate}
+    \item \textbf{Scaled Burst Duration vs.\ Data Volume Trade-Off:} To keep the total multi-frequency calibration sweep within a practical bench duration while preventing memory buffer overflow during high-speed streaming, the burst duration was scaled inversely with frequency: from $500\text{ ms}$ at $100\text{ Hz}$ down to $2\text{ ms}$ at $2\text{ MHz}$. At low frequencies, a longer time window is required to accumulate enough cycles ($N \ge 40$) for statistically meaningful period estimation. Conversely, maintaining a $500\text{ ms}$ burst at $2\text{ MHz}$ would generate over one million edge transitions, needlessly increasing the CSV dataset without providing additional insight; limiting megahertz bursts to $2\text{--}10\text{ ms}$ yields $2{,}000\text{--}3{,}600$ steady-state pulses, which is more than sufficient to bound the mean frequency and jitter with high confidence.
+    \item \textbf{Exclusion of Hardware Turn-On/Turn-Off Transients:} The nominal pulse counts produced by the generator (e.g., $50$ pulses at $100\text{ Hz}$, $100$ at $500\text{ Hz}$, $200$ at $1\text{ kHz}$) were trimmed by discarding the first five and last five transitions of every burst. This step isolates steady-state optical modulation from the initial timer synchronization latency of the ESP32 LEDC peripheral and the trailing turn-off edge, resulting in the reported counts.
+\end{enumerate}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/led_bandwidth_calibration.png}
+    \caption{Digital pulse integrity validation of the FPGA DAQ ($f_s = 50\text{ MHz}$) using a pulsed red LED from $100\text{ Hz}$ to $2\text{ MHz}$: (a) frequency tracking; (b) pulse capture; (c) duty cycle stability and sub-clock period jitter.}
+    \label{fig:led_pwm_sweep}
+\end{figure}
+
+\subsubsection{Analysis of Metrics and Electro-Optical Behavior}
+The data presented in \cref{tab:led_pwm_results} and \cref{fig:led_pwm_sweep} demonstrate:
+\begin{itemize}
+    \item \textbf{Lossless Capture and 1:1 Frequency Tracking:} The measured frequency $f_{\text{meas}}$ matches the commanded frequency $f_{\text{set}}$ across all eleven tested steps (\cref{fig:led_pwm_sweep} a). Furthermore, the receiver captured all the pulses with zero missed events throughout the entire $100\text{ Hz}\text{--}2\text{ MHz}$ range (\cref{fig:led_pwm_sweep} b).
+    
+    \item \textbf{Duty Cycle Stability and Optical Turn-Off Response:} From $100\text{ Hz}$ to $10\text{ kHz}$, the digitized signal maintains an almost ideal symmetric square wave ($50.00\%\text{--}50.02\%$). As the operating frequency increases beyond $50\text{ kHz}$, the duty cycle widens gradually to $50.50\%$ at $250\text{ kHz}$ and reaches $56.00\%$ at $2\text{ MHz}$ (\cref{fig:led_pwm_sweep} c and \cref{tab:led_pwm_results}). This minor duty-cycle stretching is physical: standard LEDs exhibit a turn-off decay slightly slower than the fast electrical turn-on edge. At microsecond periods ($T = 500\text{ ns}$ at $2\text{ MHz}$), this tail remains above the comparator threshold $V_{\text{TH}}$ for an additional $\sim 30\text{ ns}$ ($\sim 6\%$ of the cycle), slightly extending the high state without causing pulse dropouts.
+    
+    \item \textbf{Sub-Clock Period Jitter ($\sigma_T$):} At $f_s = 50\text{ MHz}$ ($\Delta t = 20\text{ ns}$), the theoretical digital quantization floor governing a uniform-sampling edge detector is (\cite[Chap 4.]{widrowQuantizationNoiseRoundoff2008})
+    \begin{equation}
+        \sigma_{\text{quant}} = \frac{\Delta t}{\sqrt{6}} = \frac{20\text{ ns}}{\sqrt{6}} \approx 8.16\text{ ns}.
+    \end{equation}
+    Across all eleven frequency steps, the measured period jitter $\sigma_T$ remains strictly bounded between $3.8\text{ ns}$ and $8.6\text{ ns}$ (\cref{fig:led_pwm_sweep} c), remaining below the single-clock period floor ($\Delta t = 20\text{ ns}$) and closely matching the theoretical quantization limit. This verifies that the BPW34 photodiode and TLV3542 Schmitt trigger (\cref{sec:circuit_schematic}) introduce negligible analog transition noise, confirming that the digital timing precision is primarily governed by the FPGA sampling clock.
+\end{itemize}
+
+\subsubsection{FPGA vs. Microcontroller (ESP32) for High-Speed Data Acquisition}
+Although a low-cost microcontroller such as the ESP32 is well suited for generating test PWM signals and driving stepper motors, delegating high-speed pulse acquisition to the FPGA provides fundamental architectural advantages:
+\begin{itemize}
+    \item \textbf{Deterministic Hardware Parallelism vs.\ Interrupt Jitter:} On the FPGA, input synchronization, edge detection, and Block RAM packing execute concurrently in dedicated logic on every $20\text{ ns}$ clock cycle with zero interrupt latency. By contrast, an ESP32 relies on CPU execution shared with FreeRTOS scheduler ticks, flash-cache misses, and serial background routines. Attempting software-based GPIO sampling at megahertz rates inevitably results in non-deterministic latency and dropped edges.
+    \item \textbf{Lossless Timestamping vs.\ Peripheral Bottlenecks:} While the ESP32 includes a hardware Pulse Counter (\texttt{PCNT}) capable of counting edges up to $40\text{ MHz}$, it functions only as an accumulator register: it cannot record individual edge timestamps or reconstruct instantaneous velocity profiles $v(t)$, duty cycles, or period jitter. Continuous DMA capture via the ESP32 \texttt{I2S} parallel peripheral is limited internal SRAM ($\sim 320\text{ KB}$, sustaining only milliseconds of raw data) and exhibits sample-skipping near $20\text{ MHz}$. In contrast, the Arty Z7-20, integrated with the ICTP ComBlock and PYNQ \cref{sec:comblock_API}, sustains continuous lossless $50\text{ MHz}$ acquisition buffered through FPGA BRAM into $512\text{ MB}$ of external DDR3 memory.
+\end{itemize}
 
 
 \section{Designs for coupling and modularity and low cost}
@@ -161,4 +226,3 @@ Finally, \cref{fig:openflexure_cal}(b) compares the grouped mean values ($\pm 1\
 \end{figure}
 
 
-\todo[inline]{plots of intensity and method to count fringes started on the camera section, can also be referenced}
