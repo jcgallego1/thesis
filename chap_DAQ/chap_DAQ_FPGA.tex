@@ -78,8 +78,9 @@ A critical feature of Hog regarding traceability is the automatic versioning sys
 Hog improves replicability, it ensures that any researcher can clone an open-hardware repository, like the one presented in \cref{sec:comblock_API}, and produce a bitstream that is functionally identical. 
 
 
-\subsection{Comblock API for PYNQ} \label{sec:comblock_API}
-\label{sec:comblock_pynq_api}
+\subsection{Comblock API for PYNQ} 
+\label{sec:comblock_API}
+% \label{sec:comblock_pynq_api}
 
 \begin{figure}[htbp]
 \centering
@@ -198,22 +199,24 @@ Hog improves replicability, it ensures that any researcher can clone an open-har
 \end{figure}
 
 
-Although the ICTP ComBlock eliminates custom AXI finite-state machines on the Programmable Logic (\texttt{PL}) side, interacting with it directly from the Zynq Processing System (\texttt{PS}) using raw memory-mapped I/O (\texttt{MMIO}) still exposes low-level hardware details to the user. Without an abstraction driver, Python scripts must calculate byte-aligned hexadecimal register offsets manually, perform bitwise masking and shifting to interpret FIFO status flags, and enforce array bounds by hand—increasing the risk of silent data corruption, FIFO overflows/underflows, or accidental writes to read-only hardware registers.
+Although the ICTP ComBlock eliminates custom AXI finite-state machines on the Programmable Logic (PL) side, interacting with it directly from the Zynq Processing System (PS) using raw memory-mapped I/O (MMIO) still exposes low-level hardware details to the user. Without an abstraction driver, Python scripts must calculate byte-aligned hexadecimal register offsets manually, perform bitwise masking and shifting to interpret FIFO status flags, and enforce array bounds by hand—increasing the risk of silent data corruption, FIFO overflows/underflows, or accidental writes to read-only hardware registers.
 
-To eliminate these low-level error modes and bridge the ComBlock cleanly into the PYNQ ecosystem, a dedicated object-oriented Python driver (Comblock API for PYNQ) was implemented \cite[Repository]{gallegoJcgallego1Comblock_API_for_PYNQ2026}. Built on top of PYNQ's DefaultIP class, the Comblock driver inspects the Vivado hardware handoff (\texttt{.hwh}) metadata when an overlay is loaded and automatically binds to the IP core instance (e.g., \texttt{cb = overlay.comblock\_0}). Rather than exposing flat memory addresses, it organizes the hardware into three specialized sub-interfaces:
+To eliminate these low-level error modes and bridge the ComBlock cleanly into the PYNQ ecosystem, a dedicated object-oriented Python driver (Comblock API for PYNQ) was implemented \cite[Repository]{gallegoJcgallego1Comblock_API_for_PYNQ2026}. Built on top of PYNQ's DefaultIP class, the Comblock driver inspects the Vivado hardware handoff (\emph{.hwh}) metadata when an overlay is loaded and automatically binds to the IP core instance (e.g., \emph{cb = overlay.comblock\_0}). Rather than exposing flat memory addresses, it organizes the hardware into three specialized sub-interfaces:
 
 \begin{itemize}
-    \item \textbf{\texttt{Register} Interface (\texttt{IN\_REGS}, \texttt{OUT\_REGS}):} Provides boundary-checked \texttt{read(offset)} and \texttt{write(offset, value)} operations for 32-bit AXI4-Lite registers. Out-of-bounds indices raise \texttt{IndexError}, while write attempts to read-only input registers raise \texttt{PermissionError}, preventing invalid bus accesses.
-    \item \textbf{\texttt{Fifo} Interface (\texttt{FIFO\_IN}, \texttt{FIFO\_OUT}):} Decodes raw hardware status bitmasks via \texttt{get\_status()} into a readable Python dictionary (\texttt{occupancy}, \texttt{empty}, \texttt{full}, \texttt{almost\_empty}, \texttt{almost\_full}, \texttt{underflow}, and \texttt{overflow}). High-throughput \texttt{read\_bulk()} and \texttt{write\_bulk()} methods transfer blocks directly to and from NumPy arrays while guarding against buffer overflows/underflows (\texttt{RuntimeError}), and \texttt{reset()} safely flushes pending entries.
-    \item \textbf{\texttt{Dram} Interface (\texttt{DRAM}):} Exposes AXI4-Full shared memory through vectorized \texttt{read\_bulk(offset, count)} and \texttt{write\_bulk(offset, data)} calls backed by NumPy slicing for fast block transfers.
+    \item \textbf{Register Interface (\emph{IN\_REGS}, \emph{OUT\_REGS}):} Provides boundary-checked \emph{read(offset)} and \emph{write(offset, value)} operations for 32-bit AXI4-Lite registers. Out-of-bounds indices raise \emph{IndexError}, while write attempts to read-only input registers raise \emph{PermissionError}, preventing invalid bus accesses.
+    \item \textbf{Fifo Interface (\emph{FIFO\_IN}, \emph{FIFO\_OUT}):} Decodes raw hardware status bitmasks via \emph{get\_status()} into a readable Python dictionary (\emph{occupancy}, \emph{empty}, \emph{full}, \emph{almost\_empty}, \emph{almost\_full}, \emph{underflow}, and \emph{overflow}). High-throughput \emph{read\_bulk()} and \emph{write\_bulk()} methods transfer blocks directly to and from NumPy arrays while guarding against buffer overflows/underflows (\emph{RuntimeError}), and \emph{reset()} safely flushes pending entries.
+    \item \textbf{Dram Interface:} Exposes AXI4-Full shared memory through vectorized
+    \emph{read\_bulk}\allowbreak\emph{(offset,\allowbreak count)} and
+    \emph{write\_bulk}\allowbreak\emph{(offset,\allowbreak data)} calls backed by NumPy slicing for fast block transfers.
 \end{itemize}
 
 \paragraph{Significance for the Interferometer Acquisition System.}
-Introducing \texttt{Comblock\_API\_for\_PYNQ} provides three decisive advantages for experimental operation (\cref{fig:comblock_api_arch}):
+Introducing Comblock API for PYNQ provides three decisive advantages for experimental operation (\cref{fig:comblock_api_arch}):
 \begin{enumerate}
     \item \textbf{Hardware-Safe Experimentation:} Automatic bounds, permission, and FIFO-occupancy checks prevent illegal hardware states during interactive Jupyter Notebook sessions, allowing rapid reconfiguration of gating, resets, and readout intervals without crashing the AXI bus.
-    \item \textbf{Direct Scientific Computing Integration:} By returning NumPy arrays directly from \texttt{FIFO\_IN.read\_bulk()} and \texttt{DRAM.read\_bulk()}, captured fringe counts and nanosecond timestamps feed seamlessly into Python analysis routines (velocity reconstruction, spectral analysis, and visualization) without slow per-sample Python loops.
-    \item \textbf{Decoupled Software–Gateware Maintenance:} Application scripts reference semantic methods (such as \texttt{cb.IN\_REGS.read(0)}) rather than hardcoded hexadecimal addresses, keeping host software portable across different Zynq boards.
+    \item \textbf{Direct Scientific Computing Integration:} By returning NumPy arrays directly from \emph{FIFO\_IN.read\_bulk()} and \emph{DRAM.read\_bulk()}, captured fringe counts and nanosecond timestamps feed seamlessly into Python analysis routines (velocity reconstruction, spectral analysis, and visualization) without slow per-sample Python loops.
+    \item \textbf{Decoupled Software–Gateware Maintenance:} Application scripts reference semantic methods (such as \emph{cb.IN\_REGS.read(0)}) rather than hardcoded hexadecimal addresses, keeping host software portable across different Zynq boards.
 \end{enumerate}
 
 
