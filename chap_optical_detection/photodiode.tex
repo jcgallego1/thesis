@@ -342,7 +342,7 @@ Because $C_f = 2.5\text{ pF}$ sits just above $C_{f,\min}$, the TIA operates in 
 \subsection{Noise-Resilient Schmitt Trigger}
 To convert the analog signal $V_{\text{TIA}}$ into a $0\text{ V}$ / $3.3\text{ V}$ digital signal we use \texttt{U1B} as a non-inverting Schmitt trigger \cite[Chap 9.]{francoDesignOperationalAmplifiers2015}. The $10\,\text{k}\Omega$ precision potentiometer $R_{\text{pot}}$ (decoupled by $C_2 = 100\,n\text{F}$) sets the midpoint threshold voltage $V_{\text{TH}}$ on (Pin 6). Positive feedback via $R_a = 1\,\text{k}\Omega$ and $R_h = 22\,\text{k}\Omega$ defines the non-inverting node voltage at (Pin 5) as:
 \begin{equation}
-    V_+ = \frac{R_h V_{\text{TIA}} + R_a V_{\text{OUT}}}{R_a + R_h},
+    V_+ = \frac{R_h V_{\text{TIA}} + R_a V_{\text{OUT}}}{R_a + R_h}
 \end{equation}
 yielding distinct rising and falling switching thresholds:
 \begin{equation}

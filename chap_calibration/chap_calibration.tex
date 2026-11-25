@@ -94,8 +94,8 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
 \subsection{Linear Regression and Bidirectional Symmetry}
 \cref{fig:openflexure_cal}(a) plots total measured displacement $\Delta x$ against commanded steps $N \in \{1000, 1500, 2000, 2500, 3000\}$, with $n = 5$ repeated trials per step count in each direction ($25$ runs per direction, error bars indicating $\pm 1\sigma$ trial-to-trial standard deviation). Linear least-squares fits across all runs reveal strong linearity in both actuation directions:
 \begin{align}
-    \text{Positive direction:}\quad s_+ &= 11.80 \pm 0.28\text{ nm/step} \quad (R^2 = 0.9875), \\
-    \text{Negative direction:}\quad s_- &= 11.67 \pm 0.69\text{ nm/step} \quad (R^2 = 0.9249).
+    \text{Positive direction:}\quad s_+ &= 11.80 \pm 0.28\text{ nm/step} \quad (R^2 = 0.9875) \\
+    \text{Negative direction:}\quad s_- &= 11.67 \pm 0.69\text{ nm/step} \quad (R^2 = 0.9249)
 \end{align}
 Both calibrated incremental slopes agree closely with the $12.2\text{ nm/step}$ nominal CAD value within experimental uncertainty (differing by only $3.3\%\text{--}4.3\%$) and agree with each other within $\sim 1.1\%$, confirming consistent bidirectional sensitivity once preloaded. The negative direction exhibits slightly larger run-to-run dispersion ($\pm 0.69\text{ nm/step}$ and wider $\pm 1\sigma$ error bars at $N = 1500$ and $2500$) than the positive direction ($\pm 0.28\text{ nm/step}$), reflecting minor mechanical asymmetry between pushing against and relaxing with the PLA flexure restoring force and gear mesh. Crucially, both regressions share a small negative $y$-intercept ($\approx -1.4\text{ to }-1.5\ \mu\text{m}$), capturing a nearly constant startup loss prior to rigid engagement. Because this startup offset is absorbed into the intercept rather than the slope, multi-step linear regression accurately recovers the true incremental stage sensitivity ($\sim 11.7\text{--}11.8\text{ nm/step}$) even when single-run averages are pulled down at shorter travels ($N = 1000$).
 
@@ -154,7 +154,7 @@ The data presented in \cref{tab:led_pwm_results} and \cref{fig:led_pwm_sweep} de
     
     \item \textbf{Sub-Clock Period Jitter ($\sigma_T$):} At $f_s = 50\text{ MHz}$ ($\Delta t = 20\text{ ns}$), the theoretical digital quantization floor governing a uniform-sampling edge detector is \cite[Chap 4.]{widrowQuantizationNoiseRoundoff2008}:
     \begin{equation}
-        \sigma_{\text{quant}} = \frac{\Delta t}{\sqrt{6}} = \frac{20\text{ ns}}{\sqrt{6}} \approx 8.16\text{ ns}.
+        \sigma_{\text{quant}} = \frac{\Delta t}{\sqrt{6}} = \frac{20\text{ ns}}{\sqrt{6}} \approx 8.16\text{ ns}
     \end{equation}
     Across all eleven frequency steps, the measured period jitter $\sigma_T$ remains strictly bounded between $3.8\text{ ns}$ and $8.6\text{ ns}$ (\cref{fig:led_pwm_sweep} c), remaining below the single-clock period floor ($\Delta t = 20\text{ ns}$) and closely matching the theoretical quantization limit. This verifies that the BPW34 photodiode and TLV3542 Schmitt trigger (\cref{sec:circuit_schematic}) introduce negligible analog transition noise, confirming that the digital timing precision is primarily governed by the FPGA sampling clock.
 \end{itemize}
@@ -167,62 +167,71 @@ Although a low-cost microcontroller such as the ESP32 is well suited for generat
 \end{itemize}
 
 
-\section{Designs for coupling and modularity and low cost}
+\section{Designs for Coupling, Modularity and Low Cost}
+\label{sec:coupling_designs}
+
+To obtain a compact and low-cost measurement system, a set of modular parts was prototyped in CAD and printed in FDM (fused deposition modeling) 3D printing. The parts hold the interferometer, couple it to the optical detectors and let the camera and the photodiode be used at the same time. The designs are shown in \cref{fig:printed_parts_main,fig:printed_parts_detectors}.
 
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/interferometer_holder.png}
-        \caption{Interferometer Holder}
-        \label{fig:interferometer_holder_a}
+        \caption{Interferometer holder}
+        \label{fig:interferometer_holder}
     \end{subfigure}\hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/coupling.png}
-        \caption{Coupling}
-        \label{fig:coupling_b}
+        \includegraphics[width=\textwidth]{images/c270_holder.png}
+        \caption{Camera sensor holder}
+        \label{fig:camera_holder}
     \end{subfigure}
-    \caption{3D Printed modules  a) Interferometer holder; b) Coupling between the interferometer and the camera sensor enclosure.}
-    \label{fig:printed_parts}
+    \caption{3D printed modules. a) Interferometer holder; b) Camera sensor holder, interchangeable and fitted into the coupling.}
+    \label{fig:printed_parts_main}
 \end{figure}
+
+
+
+\subsubsection{Interferometer holder} The interferometer holder \cref{fig:interferometer_holder} fixes the interferometer casing in a conical seat, and a retaining bar prevents it from sliding out, so the optical unit stays in a repeatable position.
+
+\subsubsection{Interchangeable camera holder} The camera sensor holder \cref{fig:camera_holder} fits into the coupling \cref{fig:coupling} and can be swapped for other holders, which makes the design modular. It also allows positioning the sensor along the optical path.
 
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/c270_holder.png}
-        \caption{Camera Sensor Holder}
-        \label{fig:camera_holder_a}
+        \includegraphics[width=\textwidth]{images/coupling.png}
+        \caption{Coupling}
+        \label{fig:coupling}
     \end{subfigure}\hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/photodiode_holder.png}
-        \caption{Photodiode Holder}
+        \caption{Photodiode holder}
         \label{fig:photodiode_holder}
     \end{subfigure}
-    \caption{3D Printed modules  a) Interferometer holder; b) Coupling between the interferometer and the camera sensor enclosure.}
-    \label{fig:printed_parts}
+    \caption{3D printed modules. a) Coupling between the interferometer holder and the camera sensor holder, with a square opening for the photodiode holder; b) Photodiode holder, inserted through the square opening of the coupling.}
+    \label{fig:printed_parts_detectors}
 \end{figure}
 
-\section{Calibration and testing of the interferometer with the openflexure stage}
+\subsubsection{Coupling} The coupling \cref{fig:coupling} attaches to the interferometer holder and extends the optical path to the detectors with a closed channel that also shields the sensors from ambient light. It houses the camera sensor holder \cref{fig:camera_holder} and has a square opening through which the photodiode holder is introduced.
+
+
+
+\subsubsection{Simultaneous use of photodiode and camera} The photodiode holder \cref{fig:photodiode_holder} slides in through the square opening of the coupling, so it can be placed or removed without dismounting the camera module. This allows using both detectors at the same time and taking advantage of each one (see \cref{sec:c270} and \cref{sec:circuit_schematic}):
+
+\begin{itemize}
+    \item \textbf{Photodiode:} its high sampling rate counts the fringes continuously, so no counts are lost even at velocities where the camera, limited to $30\text{ fps}$, would miss fringes.
+    \item \textbf{Camera:} it provides the direction of the fringe movement (\cref{sec:roi_fringe_velocity}), and its spatial information can be used to interpolate between fringes and reach a higher spatial resolution than the half-wavelength step of simple fringe counting.
+\end{itemize}
 
 \begin{figure}[htbp]
     \centering
-    \begin{subfigure}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/openflexure_with_mountings_compressed.jpg}
-        \caption{Interferometer Holder}
-        \label{fig:interferometer_holder_a}
-    \end{subfigure}\hfill
-    \begin{subfigure}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/coupling.png}
-        \caption{Coupling}
-        \label{fig:coupling_b}
-    \end{subfigure}
-    \caption{3D Printed modules  a) Interferometer holder; b) Coupling between the interferometer and the camera sensor enclosure.}
-    \label{fig:printed_parts}
+    \includegraphics[width=0.55\textwidth]{images/openflexure_with_mountings_compressed_2.jpg}
+    \caption{Top view of the final assembly: interferometer, coupling and detector modules mounted on the OpenFlexure Block stage \cite{mengOpenFlexureBlockStage2020}.}
+    \label{fig:openflexure_top_view}
 \end{figure}
 
+\cref{fig:openflexure_top_view} shows the final assembly used for the calibration. The interferometer holder, the coupling and the detector modules are mounted directly on the OpenFlexure Block stage, forming a single compact block.
 
+An important result of this design is that the system works without an optical table or any vibration-damping platform. Because all the optical components are small and rigidly joined in one compact body, external vibrations move the whole assembly almost equally, so the relative motion between the beam splitter, the mirrors, the lens and the detectors stays very low. Since the fringe pattern depends only on this relative displacement, the measurement is largely insensitive to ambient vibration, which reduces cost and makes the system easy to use outside of a specialized optics laboratory.
