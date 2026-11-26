@@ -43,3 +43,39 @@ The experimental setup contains a compact Michelson interferometer integrated di
 
 To maintain optical integrity during assembly, all internal optical components—including the beamsplitter, fixed mirror, movable mirror, and divergent lens (labeled 3 in \cref{fig:interferometer_side_front_b}) were secured using UV-curable resin. This bonding method was specifically chosen over traditional solvent-based glues to prevent out-gassing and volatile residue condensation on the delicate optical surfaces.
 
+
+\subsection{Interference Pattern}
+\label{sec:pattern_obtained}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/pattern_4mm_contrast_B.png}
+    \caption{Interference pattern of the interferometer projected onto millimeter-ruled paper placed $4\text{ mm}$ from the interferometer output. Only the blue channel is shown for visibility purposes.}
+    \label{fig:pattern_back}
+\end{figure}
+
+
+
+\Cref{fig:pattern_back} shows the experimental interference pattern projected onto a millimeter-ruled paper screen placed $4\text{ mm}$ from the interferometer output. The image was taken with the c270 camera (\cref{sec:c270}) and is displayed using only the blue channel. This channel was chosen because the red channel, where the laser emits, was clipped in about $29\%$ of the pixels, which flattens the fringe peaks, while the green channel carried almost no signal; the blue channel was not clipped and kept the fringe contrast over the whole field.
+
+In the central region the fringes are nearly parallel and equally spaced. Toward the lower right they bend and the spacing changes, which is the typical curved shape of Michelson fringes when the two wavefronts are not perfectly parallel or have different curvature. The fringe pattern is superimposed on a smooth brightness gradient, brighter at the center and darker at the borders, that follows the Gaussian intensity profile of the laser beam. Dust, residues on the optical surfaces and parasitic reflections between the faces of the beam splitter and the lens can create the small local deformations appreciated on the figure.
+
+\subsection{Interference Irradiance}
+\label{sec:michelson_irradiance_comparison}
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=15cm]{images/michelson_comparison.png}
+    \end{center}
+    \caption{Experimental vs Theoretical Michelson Irradiance}
+    \label{fig:michelson_comparison}
+\end{figure}
+
+To verify that the interference pattern captured by the Logitech C270 sensor adheres to classical two-beam interferometry \cref{fig:michelson_comparison}, a full frame spatial irradiance analysis was performed on the red channel of the camera, with a laser of ($\lambda = 632.8\text{ nm}$). At the selected capture resolution of $640 \times 480\text{ px}$, the C270 has an effective sensor-plane spatial scale of $5.6\ \mu\text{m/px}$ ($3.58\text{ mm} \times 2.69\text{ mm}$ active field of view). Pixel intensities are recorded in 8-bit Digital Numbers ($\text{DN} \in [0, 255]$), representing raw quantized levels from the camera's analog to digital converter.
+
+The experimental irradiance is compared with the theoretical spatial irradiance of the ideal two-beam Michelson interferometer, \cref{eq:michelson_spatial}, where $I_0 = I_1 + I_2$ is the mean background irradiance, $V$ the fringe visibility, $\Lambda$ the spatial fringe period and $u = x\cos\theta + y\sin\theta$ the coordinate perpendicular to the fringe orientation $\theta = \arctan2(k_y, k_x)$.
+
+First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifies the dominant fringe wavevector $(k_x, k_y)$ across the full $640 \times 480$ frame. All image pixels are then projected onto the $u$-axis and averaged along the fringe direction to suppress random laser speckle, obtaining an experimental profile $I_{\text{exp}}(u)$ along with its spatial standard deviation $\pm 1\sigma(u)$. Fitting \cref{eq:michelson_spatial} to $I_{\text{exp}}(u)$ via nonlinear least squares extracts $(I_0, V, \Lambda, \phi_0)$ directly from the experimental data without assuming ideal unit contrast. For instance, an experimentally fitted visibility of $V \approx 0.45$ reflects practical sources of error such as slight beam-splitter optical beam paths imbalance ($I_2/I_1$), laser speckle grains, and partial spatial/temporal coherence effects.
+
+Overall, the strong correlation and low relative root-mean-square error ($\text{RMSE}$ relative to $I_0$) confirm that the optical setup produces clean Michelson interference.

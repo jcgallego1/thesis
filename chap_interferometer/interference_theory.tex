@@ -1,0 +1,25 @@
+\subsubsection{Two-Beam Interference and Fringe Visibility}
+\label{sec:two_beam_interference}
+
+In a two-beam interferometer such as the Michelson configuration, the superposition of two coherent monochromatic beams with individual irradiances $I_1(\mathbf{r})$ and $I_2(\mathbf{r})$ and relative phase difference $\delta(\mathbf{r}, t)$ produces a total spatial irradiance governed by the general interference equation \cref{eq:general_interference_irradiance}.
+
+
+\begin{equation}
+    I(\mathbf{r}, t) = I_1(\mathbf{r}) + I_2(\mathbf{r}) + 2\sqrt{I_1(\mathbf{r}) I_2(\mathbf{r})}\cos\!\bigl(\delta(\mathbf{r}, t)\bigr)
+    \label{eq:general_interference_irradiance}
+\end{equation}
+
+
+Under ideal conditions where both beams have equal irradiance ($I_1 = I_2 = I_0$) and zero stray background, simplifies via the identity $1 + \cos\delta = 2\cos^2(\delta/2)$ to $I = 4I_0\cos^2(\delta/2)$ \cite{pedrottiIntroductionOptics2007, hechtOptics2017}. In practical experimental setups, however, unequal beamsplitter splitting ratios, mirror reflection losses, partial spatial coherence, and ambient background light yield a local baseline irradiance $I_0'(\mathbf{r}) = I_1(\mathbf{r}) + I_2(\mathbf{r}) + I_{\text{stray}}(\mathbf{r})$ and fringe visibility $V(\mathbf{r}) \in [0, 1]$, allowing \cref{eq:general_interference_irradiance} to be written as
+\begin{equation}
+    I(\mathbf{r}, t) = I_0'(\mathbf{r})\Bigl[1 + V(\mathbf{r})\cos\!\bigl(\delta(\mathbf{r}, t)\bigr)\Bigr]
+    \label{eq:visibility_irradiance}
+\end{equation}
+
+For a stationary pattern observed on a plane, the phase difference varies linearly with position, $\delta(x, y) = k_x x + k_y y + \phi_0$, and the irradiance of the ideal two-beam Michelson interferometer is
+\begin{equation}
+    I_{\text{theo}}(x, y) = I_1 + I_2 + 2\sqrt{I_1 I_2}\,\cos(k_x x + k_y y + \phi_0)
+    = I_0\left[1 + V\cos\!\left(\frac{2\pi}{\Lambda}\,u + \phi_0\right)\right]
+    \label{eq:michelson_spatial}
+\end{equation}
+where $I_0 = I_1 + I_2$ is the mean background irradiance, $V = \frac{2\sqrt{I_1 I_2}}{I_1 + I_2} \in [0, 1]$ is the fringe visibility, $\Lambda$ is the spatial fringe period, and $u = x\cos\theta + y\sin\theta$ is the coordinate perpendicular to the fringe orientation $\theta = \arctan2(k_y, k_x)$.

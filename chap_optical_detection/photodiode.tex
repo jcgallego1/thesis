@@ -250,7 +250,7 @@ A fundamental engineering trade-off in PIN diode design involves the thickness o
 
 In the \cref{fig:pin_photodiode} we can see the schematic cross-section of a PIN photodiode and its corresponding energy band diagram under reverse bias voltage. The incident photons ($P_{\text{inc}}$) are absorbed in the intrinsic region, some are reflected as $\Theta_R$ indicates, generating electron-hole pairs. The electric field across the depletion region causes the electrons to drift towards the n+ region and the holes towards the p+ region, resulting in a fast photocurrent ($J_{\text{dr}}$) that can be measured externally and thus provide a high-speed response.
 
-\section{Circuit Schematic for Photodiode}
+\subsection{Circuit Schematic for Photodiode}
 \label{sec:circuit_schematic}
 
 \begin{figure}[htbp]
@@ -313,7 +313,7 @@ In the \cref{fig:pin_photodiode} we can see the schematic cross-section of a PIN
 \label{fig:tia_schmitt}
 \end{figure}
 
-\subsection{Reverse Bias BPW34}
+\subsubsection{Reverse Bias BPW34}
 At zero bias ($V_R = 0\text{ V}$), the BPW34 exhibits a large junction capacitance ($C_D \approx 70\text{ pF}$), which limits speed of detection. Applying a reverse voltage widens the depletion region, reducing $C_D$ to $\sim 25\text{ pF}$ at $V_R = 3\text{ V}$ and accelerating carrier transit time \cite{BPW34}.
 
 In \cref{fig:tia_schmitt}, the BPW34 anode is connected directly to $\text{GND}$ and its cathode is connected to the inverting node (Pin 2) of \texttt{U1A}. The voltage divider $R_1, R_2$ (bypassed by $C_1$) sets the non-inverting input (Pin 3) to:
@@ -322,7 +322,7 @@ In \cref{fig:tia_schmitt}, the BPW34 anode is connected directly to $\text{GND}$
 \end{equation}
 Because negative feedback forces (Pin 2) to match (Pin 3), the photodiode is reverse-biased by $V_R = V_{\text{REF}} \approx 2.24\text{ V}$ ($C_D \approx 28\text{ pF}$).
 
-\subsection{High-Speed Transimpedance Amplifier}
+\subsubsection{High-Speed Transimpedance Amplifier}
 When light illuminates the BPW34 photocurrent $I_{\text{ph}}$ flows from the cathode (Pin 2) to $\text{GND}$. Since the input of the TLV3542 draws negligible current ($\sim 3\text{ pA}$), this current must flow from \texttt{U1A}'s output (Pin 1) through $R_f$, resulting in a positive output voltage:
 \begin{equation}
     V_{\text{TIA}} = V_{\text{REF}} + I_{\text{ph}} R_f = 2.24\text{ V} + I_{\text{ph}} R_f
@@ -339,7 +339,7 @@ Because $C_f = 2.5\text{ pF}$ sits just above $C_{f,\min}$, the TIA operates in 
     f_{-3\text{dB}} = \frac{1}{2\pi R_f C_f} = \frac{1}{2\pi (10\,\text{k}\Omega)(2.5\text{ pF})} \approx 6.37\text{ MHz}
 \end{equation}
 
-\subsection{Noise-Resilient Schmitt Trigger}
+\subsubsection{Noise-Resilient Schmitt Trigger}
 To convert the analog signal $V_{\text{TIA}}$ into a $0\text{ V}$ / $3.3\text{ V}$ digital signal we use \texttt{U1B} as a non-inverting Schmitt trigger \cite[Chap 9.]{francoDesignOperationalAmplifiers2015}. The $10\,\text{k}\Omega$ precision potentiometer $R_{\text{pot}}$ (decoupled by $C_2 = 100\,n\text{F}$) sets the midpoint threshold voltage $V_{\text{TH}}$ on (Pin 6). Positive feedback via $R_a = 1\,\text{k}\Omega$ and $R_h = 22\,\text{k}\Omega$ defines the non-inverting node voltage at (Pin 5) as:
 \begin{equation}
     V_+ = \frac{R_h V_{\text{TIA}} + R_a V_{\text{OUT}}}{R_a + R_h}
@@ -355,7 +355,7 @@ The resulting hysteresis window is independent of $V_{\text{TH}}$:
 \end{equation}
 This $150\text{ mV}$ band prevents intensity noise or small optical fluctuations near threshold crossings from generating unwanted transitions, this behavior is shown in \cref{fig:schmitt_behavior}.
 
-\begin{figure}[htbp]
+\begin{figure}
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[>=Latex, font=\small]

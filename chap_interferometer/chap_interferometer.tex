@@ -1,5 +1,19 @@
 \chapter{Michelson Interferometer}
 
+Interferometry is one of the most precise measurement techniques available to experimental physics. It uses the wavelength of light as a ruler: when two coherent beams that traveled different optical paths are recombined, the resulting irradiance depends on their path difference in units of the wavelength, so that changes of a fraction of a micrometer become directly observable. The Michelson interferometer, devised by Albert A. Michelson in the early 1880s, is the classical realization of this idea. Michelson first built it to detect the motion of the Earth through the supposed luminiferous ether, and the null result of the Michelson--Morley experiment of 1887 became a cornerstone for the development of special relativity. Michelson later used the same instrument to measure the standard meter in terms of the wavelength of the cadmium red line, linking length metrology to a property of light, and was awarded the Nobel Prize in Physics in 1907 for his optical precision instruments and metrological investigations.
+
+Since then, interferometers have become a general-purpose tool. Laser interferometers are the reference for the calibration of machine tools and positioning stages, and kilometer-scale Michelson interferometers detect gravitational waves through length changes smaller than the diameter of a proton. In all these cases the measurement is non-contact and is traceable to the wavelength of the source, which is what makes interferometry attractive when high accuracy is needed.
+
+The problem addressed in this work is the measurement of very small displacements, that is, of high spatial resolution, in positioning systems. These systems designed to move in steps of tens of nanometers \cite{mengOpenFlexureBlockStage2020, liaoDesignTestingCompliant2024,liaoLowcostOpensourceXYZ2022}, but their real step size depends on the mechanics, backlash, friction and the actuator, and it must be verified experimentally. Contact sensors can disturb such mechanisms, and commercial laser interferometers that reach the required resolution are expensive and usually need an optical table to isolate them from vibrations.
+
+A Michelson interferometer is a natural choice for this problem. When the movable mirror advances by $\lambda/2$ one complete fringe passes through the detector, so that counting fringes gives displacement in units of the laser wavelength (about $316\text{ nm}$ per fringe for $\lambda = 632.8\text{ nm}$). Its optical components are also simple and have already been integrated at low cost: optical pickup units recycled from CD/DVD/Blu-ray drives contain a laser, a beam splitter and focusing optics, and have been reused for biosensing, force measurement and nanoscale 3D printing \cite{hwuHackingCDDVD2018, changOpensourceForceAnalyzer2022, changMicroNanoscale3D2021}, showing the potential of recycled industrial hardware.
+
+In this work a compact Michelson interferometer is built from a recycled Blu-ray optical unit and used as a displacement and velocity sensor for positioning systems. This chapter presents the theory of two-beam interference, the experimental setup of the interferometer, and the interference pattern obtained, which is the basis for the displacement and velocity measurements of the following chapters.
+
+
+\section{Michelson Interferometer Theory}
+A schematic of the Michelson interferometer is shown in \cref{fig:schematic_michelson_interferometer}, from the source of light (S) we get the beam (1) being split by the beam splitter (BS) resulting in beams (3) transmitted and (2) by reflection, these reflect on mirrors (M1) and (M2) respectively and return to the BS where (3) is reflected and (2) is transmitted, and the two beams come together exiting the interferometer as beam (4). Thus, beam 4 includes rays that have traveled different optical paths and will demonstrate interference \cite[Chap 8.]{pedrottiIntroductionOptics2007}.
+
 \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[
@@ -80,11 +94,12 @@
     \label{fig:schematic_michelson_interferometer}
 \end{figure}
 
-A schematic of the michelson interferometer is shown in \cref{fig:schematic_michelson_interferometer}, from the source of light (S) we get the beam (1) being split by the beam splitter (BS) resulting in beams (3) transmitted and (2) by reflection, these reflect on mirrors (M1) and (M2) respectively and return to the BS where (3) is reflected and (2) is transmitted, and the two beams come together exiting the interferometer as beam (4). Thus, beam 4 includes rays that have traveled different optical paths and will demonstrate interference \cite[Chap 8.]{pedrottiIntroductionOptics2007}.
 
 
-
-\input{chap_interferometer/mirror_displacement.tex}
-\input{chap_interferometer/ROI.tex}
-\input{chap_interferometer/sampling_speed.tex}
+\input{chap_interferometer/interference_theory.tex}
 \input{chap_interferometer/interferometer_design}
+
+\section{Conclusions}
+\label{sec:interferometer_conclusions}
+
+The compact Michelson interferometer built from a recycled Blu-ray optical unit produces a stable interference pattern of about eight fringes, with a spatial period of approximately $2\text{ mm}$ on the screen, nearly parallel at the center and curved toward the borders. The measured irradiance profile follows the two-beam model of \cref{eq:michelson_spatial} (\cref{sec:michelson_irradiance_comparison}), with a fitted visibility of $V \approx 0.45$ limited by beam imbalance, speckle and partial coherence. Its compactness allows operation without an optical table, since vibrations displace all components almost equally.
