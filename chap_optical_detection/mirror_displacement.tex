@@ -1,6 +1,11 @@
-
-\subsection{Relating Fringe Movement to Mirror Displacement and Velocity}
+\subsection{Fringe Movement to Mirror Displacement and Velocity}
 \label{sec:fringe_to_displacement_velocity}
+
+A detector only delivers intensity values; to obtain a physical quantity such as a displacement or a velocity, those values must be linked to the quantity of interest through a model. In interferometry this link is the fringe count: since Michelson used it to express the meter in wavelengths of light, the passage of fringes has been the way of converting a change of optical path into a length. Establishing this relation is what turns the interferometer and its detectors from an instrument that produces a pattern into an instrument that measures.
+
+For this work the theoretical background is relevant for several reasons. It fixes the displacement associated with each fringe, and     therefore the resolution that fringe counting can reach (\cref{eq:displacement_m2}). It relates the velocity of the mirror to the rate at which fringes cross the detector (\cref{eq:velocity_fringe_rate}), which is the quantity that limits how fast the mirror can move before the camera starts to lose fringes (\cref{sec:camera_velocity}). It also shows that a single intensity value cannot tell in which direction the mirror moves, since the sign of the motion is encoded in the direction of the fringe progression, which motivates the use of the camera and its spatial information.
+
+The following sections derive the relation between fringe movement, mirror displacement and velocity, and then present the method used to apply it to the frames of the camera by tracking the irradiance of a region of interest (\cref{sec:roi_fringe_velocity}), together with the graphical interface that implements it (\cref{sec:camera_gui}).
 
 Let $L_2(t)$ denote the optical path length from $\text{BS}$ to the movable mirror $M2$ at time $t$, and let $L_1$ denote the constant optical path length along the fixed path to $M1$. Because each beam traverses the distance between $\text{BS}$ and its corresponding mirror twice, the round-trip optical path difference in a medium of refractive index $n$ (with $n \approx 1$ in air) is
 \begin{equation}

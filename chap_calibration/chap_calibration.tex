@@ -84,11 +84,12 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
     \begin{center}
         \includegraphics[width=15cm]{images/openflexure_calibration.png}
     \end{center}
-    \caption{Openflexure calibration of step size.}
+    \caption{Openflexure calibration of step size. Blue: negative direction; red: positive direction.}
     \label{fig:openflexure_cal}
 \end{figure}
 
 \subsection{Definition of Plot Metrics}
+\label{sec:plot_metrics}
 \begin{itemize}
     \item \textbf{Nominal CAD ($12.2\text{ nm/step}$):} Here, \textbf{CAD} stands for \textit{Computer-Aided Design}. This dotted reference line represents the idealized theoretical step size derived from the Block Stage geometric design assuming zero backlash, rigid plastic links, exact M3 lead-screw pitch ($0.5\text{ mm/rev}$), $2:1$ external gear reduction, $4096$ half-steps/rev on the 28BYJ-48 motor, and the $5:1$ flexure lever reduction ($\approx 12.2\text{ nm/step}$) \cite{mengOpenFlexureBlockStage2020}.
     \item \textbf{Run Average ($s_{\text{avg}}$):} The global effective step size over an entire sweep, computed as $s_{\text{avg}} = \Delta x_{\text{total}} / N$, where $\Delta x_{\text{total}} = m\,\frac{\lambda}{2}$ ($316.4\text{ nm/fringe}$ at $\lambda = 632.8\text{ nm}$). Because $s_{\text{avg}}$ divides total displacement by total commanded steps, it includes any startup deadband, stiction, and deceleration losses.
@@ -124,3 +125,34 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
 Both calibrated incremental slopes agree closely with the $12.2\text{ nm/step}$ nominal CAD value within experimental uncertainty (differing by only $3.3\%\text{--}4.3\%$) and agree with each other within $\sim 1.1\%$, confirming consistent bidirectional sensitivity once preloaded. The negative direction exhibits slightly larger run-to-run dispersion ($\pm 0.69\text{ nm/step}$ and wider $\pm 1\sigma$ error bars at $N = 1500$ and $2500$) than the positive direction ($\pm 0.28\text{ nm/step}$), reflecting minor mechanical asymmetry between pushing against and relaxing with the PLA flexure restoring force and gear mesh. Crucially, both regressions share a small negative $y$-intercept ($\approx -1.4\text{ to }-1.5\ \mu\text{m}$), capturing a nearly constant startup loss prior to rigid engagement. Because this startup offset is absorbed into the intercept rather than the slope, multi-step linear regression accurately recovers the true incremental stage sensitivity ($\sim 11.7\text{--}11.8\text{ nm/step}$) even when single-run averages are pulled down at shorter travels ($N = 1000$).
 
 Finally, \cref{fig:openflexure_cal}(b) compares the grouped mean values ($\pm 1\sigma$, $n = 5$) of $s_{\text{avg}}$ and $s_{\text{cruise}}$ across each step count and direction. As expected, $s_{\text{avg}}$ climbs steadily toward $\sim 11\text{--}11.5\text{ nm/step}$ for larger step counts ($1500\text{--}3000$ steps) as the initial compliance transient becomes proportionally smaller relative to total travel. Meanwhile, the $s_{\text{cruise}}$ averages consistently sit slightly above the $12.2\text{ nm/step}$ nominal line ($\sim 13\text{--}16\text{ nm/step}$, with individual runs peaking near $\sim 20.8\text{ nm/step}$); this occurs because taking the upper $40\%$ fastest intervals biases toward integer-frame rounding at smaller $\Delta f$ ($29.0\text{ fps}$) and captures brief elastic spring-forward bursts immediately following static friction breakaway, alongside minor tooth-to-tooth variability in the printed gear mesh.
+
+\subsection{Mirror Velocity from the Fringe Rate}
+\label{sec:openflexure_velocity}
+
+The same fringe traces give the velocity at which the stage was moving. Applying \cref{eq:velocity_fringe_rate} to every interval between consecutive peaks (or troughs), the fringe-crossing frequency is $f_{\text{fringe}} = f_s/\Delta f$, with $f_s = 29.0\text{ fps}$ and $\Delta f$ the number of frames of the interval, and the mirror speed is $v_{M2} = \frac{\lambda}{2}f_{\text{fringe}}$, with $\lambda/2 = 316.4\text{ nm}$. The sign of the velocity is taken from the commanded direction, since a single ROI trace cannot resolve it (\cref{sec:roi_fringe_velocity}). The mean velocity of a run is its displacement divided by the duration of the active window, and the cruise velocity is the median over the $40\%$ fastest intervals, as for $s_{\text{cruise}}$. The expected (theoretical) velocity is the commanded speed multiplied by the displacement per step of the stage, $v_{\text{expected}} = v_{\text{cmd}}\,s$. With the nominal CAD step $s = 12.2\text{ nm/step}$, obtained from the geometry of the Block Stage (\cref{sec:plot_metrics}), the commanded $55\text{ steps/s}$ give $v_{\text{expected}} = 55 \times 12.2\text{ nm} = 0.671\ \mu\text{m/s}$, which corresponds to a fringe rate of $2.1\text{ Hz}$. Using the calibrated slopes of the regression instead, $s_+ = 11.80\text{ nm/step}$ and $s_- = 11.67\text{ nm/step}$, gives $0.649\ \mu\text{m/s}$ and $0.642\ \mu\text{m/s}$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/openflexure_velocity.png}
+    \caption{Mirror velocity obtained from the fringe rate with \cref{eq:velocity_fringe_rate} compared with the theoretical velocity. a) Velocity of each fringe interval of the $1000$-step positive sweep of \cref{fig:single_run_1000}, with the error bars of $\pm 1$ frame of the interval, the run mean, the cruise median and the theoretical value of $0.671\ \mu\text{m/s}$; b) mean (squares) and cruise (circles) velocities ($\pm 1\sigma$, $n = 5$) of every direction and step count against the theoretical value, and the band (purple) of the values obtained with the calibrated slopes. Blue: negative direction; red: positive direction.}
+    \label{fig:velocity_1000}
+\end{figure}
+
+\cref{fig:velocity_1000}a shows the velocity of the $1000$-step sweep. The velocity rises from about $0.4\ \mu\text{m/s}$ during the acceleration ramp, stays around a cruise value of $0.57\ \mu\text{m/s}$ and drops during the deceleration, following the three phases described for the instantaneous step size. The error bars are the uncertainty of one frame in the length of each interval, $\delta v = v/\Delta f$, about $6\%$ in the plateau. The cruise value is below the theoretical $0.671\ \mu\text{m/s}$, which corresponds to the cruise step of $10.43\text{ nm/step}$ of this run, and the mean is lower still because it includes the ramps. \Cref{fig:velocity_1000}b compares all the sweeps with the theoretical velocity: the mean velocities lie below it and the cruise velocities above it, and the band obtained with the calibrated slopes falls between both.
+
+\begin{table}[htbp]
+\centering
+\caption{Mirror velocity measured from the fringe rate in the $50$ calibration sweeps ($55\text{ steps/s}$, $150\text{ steps/s}^2$, mean $\pm 1\sigma$ over runs), compared with the expected velocity obtained with the CAD step ($12.2\text{ nm/step}$) and with the calibrated slope of each direction.}
+\label{tab:openflexure_velocity}
+\begin{tabular}{lccccc}
+\hline
+Direction & Runs & $v_{\text{mean}}$ [$\mu$m/s] & $v_{\text{cruise}}$ [$\mu$m/s] & $v_{\text{CAD}}$ [$\mu$m/s] & $v_{\text{cal.}}$ [$\mu$m/s] \\
+\hline
+Positive & $25$ & $0.571 \pm 0.058$ & $0.746 \pm 0.092$ & $0.671$ & $0.649$ \\
+Negative & $25$ & $0.553 \pm 0.083$ & $0.813 \pm 0.150$ & $0.671$ & $0.642$ \\
+All      & $50$ & $0.562 \pm 0.071$ & $0.780 \pm 0.128$ & $0.671$ & $0.642$--$0.649$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\Cref{tab:openflexure_velocity} summarizes the velocity of all sweeps, together with the expected velocity of each direction computed with its calibrated slope. The mean velocity, $0.562 \pm 0.071\ \mu\text{m/s}$, is lower than the expected one because it includes the acceleration ramp, the breakaway and the relaxation at the end of each sweep; consistently, it grows with the number of steps, from $0.526 \pm 0.102\ \mu\text{m/s}$ for $N = 1000$ to $0.586 \pm 0.041\ \mu\text{m/s}$ for $N = 3000$, as these transients weigh less. The cruise velocity, $0.780 \pm 0.128\ \mu\text{m/s}$, is above the expected value, which is the same bias already discussed for $s_{\text{cruise}}$: it selects the fastest intervals, and at $29\text{ fps}$ an error of one frame in an interval of about $16$ frames changes the velocity by $\sim 6\%$. The expected value computed with the calibrated slopes, $s_+ = 11.80\text{ nm/step}$ and $s_- = 11.67\text{ nm/step}$, is $0.649\ \mu\text{m/s}$ and $0.642\ \mu\text{m/s}$, between the mean and the cruise values. The negative direction shows the larger dispersion, in agreement with the mechanical asymmetry found in the regression. Finally, the fastest intervals correspond to fringe rates below about $4.5\text{ Hz}$, so even then there are more than $6$ frames per fringe and the velocities are far from the aliasing limit of the camera (\cref{sec:camera_velocity}).
