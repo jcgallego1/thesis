@@ -1,11 +1,11 @@
-\section{ROI-Based Fringe Tracking and Velocity Estimation}
+\subsection{ROI-Based Fringe Tracking and Velocity Estimation}
 \label{sec:roi_fringe_velocity}
 
 In the experimental acquisition pipeline, frames of resolution $640 \times 480\text{ pixels}$ are captured at a sampling rate of $f_s = 30\text{ frames per second}$ (frame period $T_s = \frac{1}{f_s} \approx 33.33\text{ ms}$) \cref{sec:c270}. Rather than processing the entire sensor frame, a localized region of interest ($\text{ROI}$) spanning approximately one full fringe width is placed over a high-contrast region of the fringe pattern to track temporal irradiance modulation and fringe progression as movable mirror $M2$ translates along beam $(2)$ axis \cref{fig:schematic_michelson_interferometer}.
 
 
 
-\subsection{ROI Mean-Irradiance Model}
+\subsubsection{ROI Mean-Irradiance Model}
 \label{sec:roi_model_validity}
 
 Starting from the two-beam interference model with fringe visibility of \cref{eq:visibility_irradiance} (\cref{sec:two_beam_interference}), the irradiance averaged over a small $\text{ROI}$ can be modeled as follows.
@@ -21,7 +21,7 @@ where $I_{\text{bg}} \approx I_0'$ and the effective modulation amplitude is att
     \label{eq:roi_sinc_attenuation}
 \end{equation}
 
-\subsection{ROI Mean Irradiance and Classification}
+\subsubsection{ROI Mean Irradiance and Classification}
 
 \begin{figure}[htbp]
     \centering
@@ -172,7 +172,7 @@ Maxima (constructive fringe peaks passing across the $\text{ROI}$) and minima (d
 \end{itemize}
 Because a single irradiance value cannot distinguish the rising slope ($\frac{d\bar{I}}{dt} > 0$) from the falling slope ($\frac{d\bar{I}}{dt} < 0$) at intermediate brightness levels, inspecting prior frames $t_{k-1}, t_{k-2}, \dots$ is necessary to resolve phase evolution and determine direction of movement, an schematic of this behavior is shown in \cref{fig:three_step_fringes}.
 
-\subsection{Determining Direction from Frame History}
+\subsubsection{Determining Direction from Frame History}
 By combining the temporal history of $\bar{I}_{\text{ROI}}$ with local spatial/feature displacement across consecutive frames:
 \begin{enumerate}
     \item \textbf{Slope and Extremum Sequence:} Comparing $\bar{I}_{\text{ROI}}(t_k)$ against $\bar{I}_{\text{ROI}}(t_{k-1})$ and $\bar{I}_{\text{ROI}}(t_{k-2})$ establishes whether the $\text{ROI}$ is currently traversing a rising half-cycle or falling half-cycle between consecutive maxima and minima.
@@ -180,7 +180,7 @@ By combining the temporal history of $\bar{I}_{\text{ROI}}$ with local spatial/f
 \end{enumerate}
 Let $s_k \in \{+1, -1\}$ denote the signed direction indicator determined from frame history.
 
-\subsection{Displacement and Velocity Equations}
+\subsubsection{Displacement and Velocity Equations}
 Each complete fringe cycle ($\Delta m = 1$, from one maximum to the next or one minimum to the next) corresponds to a round-trip optical path change of $\lambda$, which equals an axial displacement of mirror $M2$ given by
 \begin{equation}
     \Delta d_{M2, k} = s_k\,\frac{\lambda}{2}\,\Delta m_k
