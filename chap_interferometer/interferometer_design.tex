@@ -23,6 +23,119 @@ In the \cref{fig:interferometer_setup} we can see the top view of the  interfero
 
 \begin{figure}[htbp]
     \centering
+    \begin{tikzpicture}[
+        scale=0.85,
+        beam/.style={thick, draw=black!80},
+        fwd/.style={
+            postaction={
+                decorate,
+                decoration={
+                    markings,
+                    mark=at position #1 with {\arrow{Stealth[length=2mm, width=1.5mm]}}
+                }
+            }
+        },
+        rev/.style={
+            postaction={
+                decorate,
+                decoration={
+                    markings,
+                    mark=at position #1 with {\arrow{Stealth[length=2mm, width=1.5mm, reversed]}}
+                }
+            }
+        },
+        shaft/.style={line width=2.2pt, draw=gray!65},
+        lab/.style={font=\scriptsize, align=center}
+    ]
+        % ==========================================
+        % Casing of the interferometer (optical unit)
+        % ==========================================
+        \draw[thick, dashed, rounded corners=4pt, draw=black!60, fill=gray!6]
+            (-1.5, -2.1) rectangle (5.8, 4.4);
+        \node[lab, anchor=north west] at (-1.4, 4.35) {Casing};
+
+        % ==========================================
+        % Source S (outside the casing, left)
+        % ==========================================
+        \draw[very thick, black!85] (-3.2, -1.1) -- (-3.2, 1.1);
+        \node[above, font=\small] at (-3.2, 1.15) {$S$};
+
+        % ==========================================
+        % Beam Splitter BS (center, tilted at 45 deg)
+        % ==========================================
+        \begin{scope}[rotate=45]
+            \draw[very thick, fill=gray!15, draw=black!85] (-1.05, -0.28) rectangle (1.05, 0);
+        \end{scope}
+        \node[above right, font=\small] at (0.75, 0.65) {BS};
+
+        % ==========================================
+        % Fixed mirror M1 (right of BS)
+        % ==========================================
+        \draw[very thick, fill=gray!25, draw=black!85] (2.45, -0.75) rectangle (2.75, 0.75);
+        \node[below, font=\small] at (2.6, -0.85) {$M1$};
+
+        % ==========================================
+        % Movable mirror M2 (top) with its carriage
+        % ==========================================
+        \draw[thick, fill=gray!20, draw=black!70] (0.75, 3.05) rectangle (3.55, 3.25);
+        \draw[very thick, fill=gray!25, draw=black!85] (-0.75, 3.0) rectangle (0.75, 3.3);
+        \node[above, font=\small] at (0, 3.35) {$M2$};
+        \draw[<->, >=Stealth, thick] (-1.1, 2.7) -- (-1.1, 3.7);
+        \node[left, font=\scriptsize] at (-1.15, 3.2) {$\Delta d_{M2}$};
+
+        % ==========================================
+        % Mirror shaft (carries M2) and needle shaft
+        % ==========================================
+        \draw[shaft] (3.4, -1.0) -- (3.4, 3.7);
+        \draw[thick, fill=gray!20, draw=black!70] (3.25, 2.85) rectangle (3.55, 3.45);
+        \node[lab, anchor=south] at (3.4, 3.72) {Mirror shaft};
+
+        \draw[shaft] (4.9, -3.3) -- (4.9, 5.0);
+        \node[lab, anchor=north] at (4.9, -3.35) {Needle shaft\\(to actuator)};
+        \draw[<->, >=Stealth, thick] (5.45, -3.1) -- (5.45, -2.4);
+
+        % ==========================================
+        % Flexure junction between the two shafts
+        % ==========================================
+        \draw[thick, draw=black!85]
+            (3.4, 1.0) -- (3.7, 1.0) -- (3.8, 1.18) -- (3.95, 0.82) -- (4.1, 1.18)
+            -- (4.25, 0.82) -- (4.4, 1.18) -- (4.5, 1.0) -- (4.9, 1.0);
+        \draw[->, >=Stealth] (6.6, 1.0) -- (5.0, 1.0);
+        \node[lab, anchor=west] at (6.65, 1.0) {Flexure\\junction};
+
+        % ==========================================
+        % Beams
+        % ==========================================
+        \draw[beam, fwd=0.55] (-3.2, 0) -- (0, 0);
+        \node[above, font=\small] at (-1.6, 0.1) {$(1)$};
+
+        \draw[beam, fwd=0.55, rev=0.75] (0, 0) -- (0, 3.0);
+        \node[right, font=\small] at (0.12, 1.55) {$(2)$};
+
+        \draw[beam, fwd=0.55, rev=0.75] (0, 0) -- (2.45, 0);
+        \node[above, font=\small] at (1.4, 0.12) {$(3)$};
+
+        \draw[beam, fwd=0.6] (0, 0) -- (0, -1.3);
+        \node[right, font=\small] at (0.12, -0.8) {$(4)$};
+
+        % ==========================================
+        % Divergent lens at the output and diverging beam
+        % ==========================================
+        \draw[thick, fill=blue!8, draw=black!85]
+            (-0.6, -1.25) .. controls (-0.2, -1.4) and (0.2, -1.4) .. (0.6, -1.25)
+            -- (0.6, -1.75) .. controls (0.2, -1.6) and (-0.2, -1.6) .. (-0.6, -1.75) -- cycle;
+        \node[lab, anchor=east] at (-0.75, -1.5) {Divergent\\lens};
+        \draw[beam] (0, -1.75) -- (0, -3.4);
+        \draw[beam, dashed] (0, -1.75) -- (-0.9, -3.4);
+        \draw[beam, dashed] (0, -1.75) -- (0.9, -3.4);
+        \node[lab, anchor=north] at (0, -3.45) {to detectors};
+    \end{tikzpicture}
+    \caption{Diagram of the interferometer setup. The laser (S), beam splitter (BS) and fixed mirror (M1) follow \cref{fig:schematic_michelson_interferometer}. The movable mirror (M2) is carried by a mirror shaft parallel to beam (2), which is linked through a flexure junction to a needle shaft that leaves the casing to connect with the external actuator. A divergent lens at the output spreads beam (4) before the detectors.}
+    \label{fig:interferometer_diagram}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/interferometer_side_compressed.jpg}
@@ -39,9 +152,9 @@ In the \cref{fig:interferometer_setup} we can see the top view of the  interfero
     \label{fig:interferometer_sides}
 \end{figure}
 
-The experimental setup contains a compact Michelson interferometer integrated directly into a recycled optical unit from a Blu-ray player, as detailed in \cref{fig:interferometer_sides}. A critical mechanical feature of this implementation is the decoupling and motion-transfer assembly. The movable mirror is mounted on a precision sliding shaft (labeled 2 in \cref{fig:interferometer_side_a}) that runs parallel to a secondary movable needle shaft (labeled 3 in \cref{fig:interferometer_side_a}). These two shafts are mechanically linked via a small compliant flexure junction (labeled 4 in \cref{fig:interferometer_side_front_b}). This flexure is crucial for isolating the movable mirror from external mechanical disturbances; it acts as a vibration-damping filter that prevents high-frequency mechanical noise or binding forces from the outside actuation mechanism from distorting the mirror displacement. The needle shaft extends outward through the interferometer casing to interface with the external actuation system being characterized.
+The experimental setup contains a compact Michelson interferometer integrated directly into a recycled optical unit from a Blu-ray player, as detailed in \cref{fig:interferometer_sides}, and whose functional layout is summarized in \cref{fig:interferometer_diagram}. A critical mechanical feature of this implementation is the decoupling and motion-transfer assembly. The movable mirror is mounted on a precision sliding shaft (labeled 2 in \cref{fig:interferometer_side_a}) that runs parallel to a secondary movable needle shaft (labeled 3 in \cref{fig:interferometer_side_a}). These two shafts are mechanically linked via a small compliant flexure junction (labeled 4 in \cref{fig:interferometer_side_front_b}). This flexure is crucial for isolating the movable mirror from external mechanical disturbances; it acts as a vibration-damping filter that prevents high-frequency mechanical noise or binding forces from the outside actuation mechanism from distorting the mirror displacement. The needle shaft extends outward through the interferometer casing to interface with the external actuation system being characterized.
 
-To maintain optical integrity during assembly, all internal optical componentsâ€”including the beamsplitter, fixed mirror, movable mirror, and divergent lens (labeled 3 in \cref{fig:interferometer_side_front_b}) were secured using UV-curable resin. This bonding method was specifically chosen over traditional solvent-based glues to prevent out-gassing and volatile residue condensation on the delicate optical surfaces.
+To maintain optical integrity during assembly, the fixed and movable mirror were secured using UV-curable resin. This bonding method was specifically chosen over traditional solvent-based glues to prevent out-gassing and volatile residue condensation on the delicate optical surfaces.
 
 
 \subsection{Interference Pattern}
@@ -61,21 +174,33 @@ To maintain optical integrity during assembly, all internal optical componentsâ€
 
 In the central region the fringes are nearly parallel and equally spaced. Toward the lower right they bend and the spacing changes, which is the typical curved shape of Michelson fringes when the two wavefronts are not perfectly parallel or have different curvature. The fringe pattern is superimposed on a smooth brightness gradient, brighter at the center and darker at the borders, that follows the Gaussian intensity profile of the laser beam. Dust, residues on the optical surfaces and parasitic reflections between the faces of the beam splitter and the lens can create the small local deformations appreciated on the figure.
 
-\subsection{Interference Irradiance}
+\subsubsection{Interference Irradiance}
 \label{sec:michelson_irradiance_comparison}
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=15cm]{images/michelson_comparison.png}
-    \end{center}
-    \caption{Experimental vs Theoretical Michelson Irradiance}
-    \label{fig:michelson_comparison}
+To verify that the interference pattern captured by the Logitech C270 sensor adheres to classical two-beam interferometry (\cref{fig:irradiance_image_model,fig:irradiance_profile_residual}), a full frame spatial irradiance analysis was performed on the red channel of the camera, with a laser of ($\lambda = 632.8\text{ nm}$). At the selected capture resolution of $640 \times 480\text{ px}$, the C270 has an effective sensor-plane spatial scale of $5.6\ \mu\text{m/px}$ ($3.58\text{ mm} \times 2.69\text{ mm}$ active field of view). Pixel intensities are recorded in 8-bit Digital Numbers ($\text{DN} \in [0, 255]$), representing raw quantized levels from the camera's analog to digital converter.
+
+The experimental irradiance is compared with the theoretical spatial irradiance of the ideal two-beam Michelson interferometer given by \cref{eq:michelson_spatial}, using the notation defined there for $I_0$, $V$, $\Lambda$ and the coordinate $u$ perpendicular to the fringes.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/michelson_irradiance_ab.png}
+    \caption{Irradiance of the interference pattern in the red channel ($640 \times 480\text{ px}$). a) Experimental irradiance in digital numbers (DN), with the axis $u$ perpendicular to the fringes; b) fitted two-dimensional model of \cref{eq:michelson_spatial}. The white bar in both panels corresponds to $1\text{ mm}$ on the sensor plane ($5.6\ \mu\text{m/px}$).}
+    \label{fig:irradiance_image_model}
 \end{figure}
 
-To verify that the interference pattern captured by the Logitech C270 sensor adheres to classical two-beam interferometry \cref{fig:michelson_comparison}, a full frame spatial irradiance analysis was performed on the red channel of the camera, with a laser of ($\lambda = 632.8\text{ nm}$). At the selected capture resolution of $640 \times 480\text{ px}$, the C270 has an effective sensor-plane spatial scale of $5.6\ \mu\text{m/px}$ ($3.58\text{ mm} \times 2.69\text{ mm}$ active field of view). Pixel intensities are recorded in 8-bit Digital Numbers ($\text{DN} \in [0, 255]$), representing raw quantized levels from the camera's analog to digital converter.
-
-The experimental irradiance is compared with the theoretical spatial irradiance of the ideal two-beam Michelson interferometer, \cref{eq:michelson_spatial}, where $I_0 = I_1 + I_2$ is the mean background irradiance, $V$ the fringe visibility, $\Lambda$ the spatial fringe period and $u = x\cos\theta + y\sin\theta$ the coordinate perpendicular to the fringe orientation $\theta = \arctan2(k_y, k_x)$.
+\Cref{fig:irradiance_image_model} compares the captured frame with the model fitted to all of its pixels, using the FFT estimate of the wavevector as the initial guess. The fit gives a fringe period of $\Lambda = 353\text{ px}$, which with the pixel scale above corresponds to approximately $2.0\text{ mm}$ on the sensor plane, with fringes tilted $17^{\circ}$ from the vertical and about $1.7$ periods across the frame width. The experimental image (\cref{fig:irradiance_image_model}a) follows this periodic structure, shows granular speckle and has local irregularities where the fringes are not perfectly straight. Since the pixel-by-pixel comparison includes all of these effects, the two-dimensional fit reaches only $R^2 = 0.72$ with $\text{RMSE} = 26.6\text{ DN}$, a value dominated by speckle rather than by a failure of the cosine model.
 
 First, a two-dimensional Fast Fourier Transform (2D FFT) automatically identifies the dominant fringe wavevector $(k_x, k_y)$ across the full $640 \times 480$ frame. All image pixels are then projected onto the $u$-axis and averaged along the fringe direction to suppress random laser speckle, obtaining an experimental profile $I_{\text{exp}}(u)$ along with its spatial standard deviation $\pm 1\sigma(u)$. Fitting \cref{eq:michelson_spatial} to $I_{\text{exp}}(u)$ via nonlinear least squares extracts $(I_0, V, \Lambda, \phi_0)$ directly from the experimental data without assuming ideal unit contrast. For instance, an experimentally fitted visibility of $V \approx 0.45$ reflects practical sources of error such as slight beam-splitter optical beam paths imbalance ($I_2/I_1$), laser speckle grains, and partial spatial/temporal coherence effects.
 
-Overall, the strong correlation and low relative root-mean-square error ($\text{RMSE}$ relative to $I_0$) confirm that the optical setup produces clean Michelson interference.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/michelson_irradiance_cd.png}
+    \caption{Comparison along the coordinate $u$ perpendicular to the fringes. a) Normalized irradiance $I/I_0$ averaged along the fringes (orange, with the $\pm 1\sigma$ dispersion shaded) and fitted model of \cref{eq:michelson_spatial} (dashed); b) residual between the experimental profile and the model. The upper axis gives $u$ in millimeters on the sensor plane ($5.6\ \mu\text{m/px}$).}
+    \label{fig:irradiance_profile_residual}
+\end{figure}
+
+\Cref{fig:irradiance_profile_residual}a shows that after averaging along the fringe direction the speckle is strongly reduced and the profile is well described by a sinusoid, with $R^2 = 0.970$, a correlation of $r = 0.985$ and a fitted visibility of $V = 0.447$ (the raw max--min visibility of the profile is $0.498$). The mean irradiance is $I_0 = 138.5\text{ DN}$, well inside the 8-bit range, and only about $0.1\%$ of the red-channel pixels are saturated, so clipping barely affects the profile. If the beam imbalance were the only cause of the reduced visibility, the definition of $V$ in \cref{eq:michelson_spatial} would imply $I_2/I_1 \approx 0.06$; since speckle and partial coherence also lower the visibility, this value is an upper bound of the imbalance, and the real beams are likely more balanced. The shaded $\pm 1\sigma$ band, of about $\pm 0.2\,I_0$, quantifies the spread of the irradiance along each fringe, caused by speckle and by the beam envelope.
+
+The residual of \cref{fig:irradiance_profile_residual}b stays within about $\pm 17\text{ DN}$, with $\text{RMSE} = 7.56\text{ DN}$ (about $5\%$ of $I_0$). It is not random noise but a slowly varying structure on the scale of the fringe period: the measured maxima are slightly flatter and lower, and the minima slightly deeper, than those of the model. This indicates that the main discrepancy comes from the non-uniform illumination of the beam and the small curvature of the real fringes, rather than from the cosine model itself.
+
+Overall, the strong correlation and the low relative root-mean-square error ($\text{RMSE} \approx 5\%$ of $I_0$) confirm that the optical setup produces clean Michelson interference.
