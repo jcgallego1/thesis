@@ -1,9 +1,35 @@
-\chapter{Experimental Setup, Methodology and Calibration}
+\chapter{Experimental Setup for Precision Motion}
+
+Precision positioning is the capability of moving an object by controlled amounts, down to the micrometer or nanometer scale, and it underlies techniques as different as optical microscopy, fiber alignment, nanofabrication and the characterization of sensors. Positioners of this kind were traditionally built from machined metal parts, sliding joints and piezoelectric actuators, and compliant mechanisms, which move by the elastic deformation of thin hinges instead of sliding surfaces, appeared as a way of avoiding friction and backlash. More recently, the availability of 3D printers has allowed researchers to produce compliant stages in plastic at a very low cost, and open-source designs such as the OpenFlexure Block Stage reach positioning resolutions below $100\text{ nm}$ \cite{mengOpenFlexureBlockStage2020, liaoDesignTestingCompliant2024, liaoLowcostOpensourceXYZ2022}.
+
+A positioner is only useful, however, once it has been characterized. The displacement per motor step of a printed stage is fixed in the design by its geometry, but the real value depends on the elasticity of the plastic, the backlash of the gears, the friction and the way in which the motor accelerates, so it must be measured experimentally. This requires an instrument whose resolution is much finer than the step, that measures at the same time the displacement and the velocity with which it is reached, and that is mounted on the stage in a stable and repeatable way, without disturbing its motion.
+
+The solution proposed in this work is to use the compact interferometer of the previous chapters as the measuring instrument, together with the camera and the photodiode as detectors, and to integrate them in a modular system of 3D-printed mounts that holds all the components in a fixed relative position and fixes them to the stage. The movable mirror of the interferometer is driven by the stage, so the number of fringes that cross the detectors gives the displacement, and their rate gives the velocity, following the relations of \cref{sec:fringe_to_displacement_velocity} and the region-of-interest method of \cref{sec:roi_fringe_velocity}.
+
+This chapter presents the experimental setup and its use on the OpenFlexure Block Stage. It first describes the 3D-printed mounts that hold the interferometer and the detectors and the final assembly, then introduces the OpenFlexure Block Stage and its reduction mechanism, and finally reports the measurements performed on the stage.
 
 
 
+\section{The OpenFlexure Block Stage}
+\label{sec:openflexure_stage}
 
-\section{Experimental Setup: 3D-Printed Mounts}
+The positioner used in this work is the OpenFlexure Block Stage, an open-source flexure stage that can be printed on a low-cost 3D printer \cite{mengOpenFlexureBlockStage2020}. Plastic parts obtained by 3D printing have a high surface roughness and are usually not suitable for the sliding joints of precision optomechanics. The design of the Block Stage avoids the problem by playing to the strengths of 3D printing, namely the possibility of printing complex internal geometries: it is a single monolithic mechanism that does not depend on the tight integration of high-precision parts, and its motion is produced by the elastic deformation of thin flexure hinges instead of by sliding surfaces. In this way it was demonstrated as a motorised stage with a resolution below $100\text{ nm}$ that is able to perform automated optical fiber alignment.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/openflexure_block_stage.png}
+    \caption{OpenFlexure Block Stage. The printed monolithic body contains the flexure mechanism; the gears at the end of the three arms (purple) drive the actuators, and the platform at the top, with mounting holes, carries the load.}
+    \label{fig:openflexure_photo}
+\end{figure}
+
+\Cref{fig:openflexure_photo} shows the stage. It has three actuators, one for each axis, each of them driven by a gear placed at the end of one of the arms of the body, and a platform with mounting holes that moves relative to the base and holds the sample, or in this work the element to be displaced. Each actuator turns a M3 screw that pushes a printed nut, and the displacement of the nut is reduced by a lever formed by the flexure hinges before reaching the platform. The reduction chain is shown in \cref{fig:openflexure_chain}: a stepper motor 28BYJ-48 with $4096$ half-steps per revolution drives the screw through an external gear reduction of $2:1$, the screw has a pitch of $0.5\text{ mm}$ per revolution, and the flexure lever reduces the motion by a factor of $5:1$. The nominal displacement of the platform per half-step is therefore
+\begin{equation}
+    s_{\text{CAD}} = \frac{p}{N_{\text{hs}}\, i_g\, i_f} = \frac{0.5\text{ mm}}{4096 \times 2 \times 5} \approx 12.2\text{ nm/step}
+    \label{eq:nominal_step}
+\end{equation}
+where $p$ is the screw pitch, $N_{\text{hs}}$ the number of half-steps per motor revolution, $i_g$ the gear reduction and $i_f$ the reduction of the flexure lever. This is the nominal step used as reference in the results of the following sections (\cref{sec:plot_metrics}).
+
+\section{3D-Printed Mounts}
 \label{sec:experimental_setup}
 
 This section describes the physical assembly used for all the measurements of this chapter. To obtain a compact and low-cost measurement system, a set of modular parts was prototyped in CAD and printed in FDM (fused deposition modeling) 3D printing. The parts hold the interferometer, couple it to the optical detectors and let the camera and the photodiode be used at the same time. The designs are shown in \cref{fig:printed_parts_main,fig:printed_parts_detectors}.
@@ -28,9 +54,9 @@ This section describes the physical assembly used for all the measurements of th
 
 
 
-\subsection{Interferometer holder} The interferometer holder \cref{fig:interferometer_holder} fixes the interferometer casing in a conical seat, and a retaining bar prevents it from sliding out, so the optical unit stays in a repeatable position.
+\subsubsection{Interferometer holder} The interferometer holder \cref{fig:interferometer_holder} fixes the interferometer casing in a conical seat, and a retaining bar prevents it from sliding out, so the optical unit stays in a repeatable position.
 
-\subsection{Interchangeable camera holder} The camera sensor holder \cref{fig:camera_holder} fits into the coupling \cref{fig:coupling} and can be swapped for other holders, which makes the design modular. It also allows positioning the sensor along the optical path.
+\subsubsection{Interchangeable camera holder} The camera sensor holder \cref{fig:camera_holder} fits into the coupling \cref{fig:coupling} and can be swapped for other holders, which makes the design modular. It also allows positioning the sensor along the optical path.
 
 \begin{figure}[htbp]
     \centering
@@ -50,11 +76,11 @@ This section describes the physical assembly used for all the measurements of th
     \label{fig:printed_parts_detectors}
 \end{figure}
 
-\subsection{Coupling} The coupling \cref{fig:coupling} attaches to the interferometer holder and extends the optical path to the detectors with a closed channel that also shields the sensors from ambient light. It houses the camera sensor holder \cref{fig:camera_holder} and has a square opening through which the photodiode holder is introduced.
+\subsubsection{Coupling} The coupling \cref{fig:coupling} attaches to the interferometer holder and extends the optical path to the detectors with a closed channel that also shields the sensors from ambient light. It houses the camera sensor holder \cref{fig:camera_holder} and has a square opening through which the photodiode holder is introduced.
 
 
 
-\subsection{Simultaneous use of photodiode and camera} The photodiode holder \cref{fig:photodiode_holder} slides in through the square opening of the coupling, so it can be placed or removed without dismounting the camera module. This allows using both detectors at the same time and taking advantage of each one (see \cref{sec:c270} and \cref{sec:circuit_schematic}):
+\subsubsection{Simultaneous use of photodiode and camera} The photodiode holder \cref{fig:photodiode_holder} slides in through the square opening of the coupling, so it can be placed or removed without dismounting the camera module. This allows using both detectors at the same time and taking advantage of each one (see \cref{sec:c270} and \cref{sec:circuit_schematic}):
 
 \begin{itemize}
     \item \textbf{Photodiode:} its high sampling rate counts the fringes continuously, so no counts are lost even at velocities where the camera, limited to $30\text{ fps}$, would miss fringes.
@@ -63,7 +89,7 @@ This section describes the physical assembly used for all the measurements of th
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.55\textwidth]{images/openflexure_with_mountings_compressed_2.jpg}
+    \includegraphics[width=0.55\textwidth]{images/setup_top.jpg}
     \caption{Top view of the final assembly: interferometer, coupling and detector modules mounted on the OpenFlexure Block stage \cite{mengOpenFlexureBlockStage2020}.}
     \label{fig:openflexure_top_view}
 \end{figure}
@@ -72,23 +98,118 @@ This section describes the physical assembly used for all the measurements of th
 
 An important result of this design is that the system works without an optical table or any vibration-damping platform. Because all the optical components are small and rigidly joined in one compact body, external vibrations move the whole assembly almost equally, so the relative motion between the beam splitter, the mirrors, the lens and the detectors stays very low. Since the fringe pattern depends only on this relative displacement, the measurement is largely insensitive to ambient vibration, which reduces cost and makes the system easy to use outside of a specialized optics laboratory.
 
+\Cref{fig:setup_diagram} summarizes how the displacement is produced and measured with the complete setup. From the computer, the control interface sends the number of steps, the speed and the acceleration to the ESP32, which drives the stepper motor of one axis of the stage; the gears, the screw and the flexure lever (\cref{fig:openflexure_chain}) convert these steps into a displacement $\Delta x = sN$ of the platform. A post fixed to the platform pushes the needle shaft of the interferometer, which moves the movable mirror $M2$ through the flexure junction, while the casing of the interferometer, held by the 3D-printed mounts, remains fixed to the frame of the stage. The displacement of $M2$ changes the optical path difference and therefore the interference pattern that leaves through the divergent lens. The camera records the pattern, which provides the direction of the fringe movement, and the photodiode, with the Schmitt trigger and the FPGA, timestamps the fringe transitions at high speed. Counting the fringes gives the measured displacement $\Delta d_{M2} = \frac{\lambda}{2}m$ and their rate gives the velocity, which are compared with the commanded motion.
+
+\begin{figure}[htbp]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        box/.style={draw, thick, rounded corners=3pt, text width=2.05cm, minimum height=1.45cm, align=center, font=\scriptsize},
+        mech/.style={box, fill=red!9},
+        opt/.style={box, fill=blue!9},
+        elec/.style={box, fill=green!11},
+        amech/.style={-{Stealth[length=2.4mm]}, very thick, red!70!black},
+        alight/.style={-{Stealth[length=2.4mm]}, very thick, blue!70!black},
+        adata/.style={-{Stealth[length=2.4mm]}, very thick, green!45!black},
+        lane/.style={rounded corners=4pt, draw=black!35, fill=gray!5},
+        lanelabel/.style={font=\scriptsize\bfseries, anchor=north east, text=black!75}
+    ]
+        % ---------- lanes ----------
+        \draw[lane] (-1.3, 1.4) rectangle (14.05, -1.1);
+        \node[lanelabel] at (13.95, 1.35) {Actuation (cause of the displacement)};
+        \draw[lane] (-1.3, -1.9) rectangle (14.05, -4.7);
+        \node[lanelabel, anchor=north west] at (-1.2, -1.95) {Interferometer (displacement $\rightarrow$ optical phase)};
+        \draw[lane] (-1.3, -5.3) rectangle (14.05, -8.7);
+        \node[lanelabel] at (13.95, -5.35) {Detection and analysis (measurement)};
+        \draw[thick, dashed, black!60, rounded corners=3pt] (1.3, -2.4) rectangle (8.95, -4.62);
+        \node[font=\tiny, anchor=south west, text=black!70] at (1.4, -4.6) {Interferometer casing (fixed to the stage frame)};
+
+        % ---------- lane A: actuation ----------
+        \node[elec] (pc1) at (0, 0) {Computer\\control interface\\(steps, speed, accel.)};
+        \node[elec] (esp) at (2.55, 0) {ESP32 and\\motor driver};
+        \node[mech] (mot) at (5.1, 0) {Stepper motor\\28BYJ-48};
+        \node[mech] (scr) at (7.65, 0) {Gears $2:1$,\\M3 screw and nut};
+        \node[mech] (lev) at (10.2, 0) {Flexure lever\\reduction $5:1$};
+        \node[mech] (plt) at (12.75, 0) {Stage platform\\$\Delta x = s\,N$};
+        \draw[adata] (pc1) -- (esp);
+        \draw[adata] (esp) -- (mot);
+        \draw[amech] (mot) -- (scr);
+        \draw[amech] (scr) -- (lev);
+        \draw[amech] (lev) -- (plt);
+
+        % ---------- lane B: interferometer ----------
+        \node[mech] (ndl) at (12.75, -3.5) {Needle shaft\\(pushed by a post on the platform)};
+        \node[mech] (flx) at (10.2, -3.5) {Flexure junction};
+        \node[opt] (m2) at (7.65, -3.4) {Mirror shaft and\\movable mirror $M2$};
+        \node[opt] (core) at (5.1, -3.4) {Laser $S$, beam\\splitter, fixed\\mirror $M1$};
+        \node[opt] (lens) at (2.55, -3.4) {Divergent lens};
+        \draw[amech] (plt) -- (ndl);
+        \draw[amech] (ndl) -- (flx);
+        \draw[amech] (flx) -- (m2);
+        \draw[alight] (m2) -- (core);
+        \draw[alight] (core) -- (lens);
+
+        % ---------- lane C: detection ----------
+        \node[opt] (cam) at (0, -6.9) {Camera C270\\spatial pattern,\\direction};
+        \node[elec] (pd) at (2.55, -6.9) {Photodiode BPW34,\\TIA and Schmitt trigger};
+        \node[elec] (fpga) at (5.1, -6.9) {FPGA\\fringe edges timestamped at $50\text{ MHz}$};
+        \node[elec, text width=4.6cm] (pc2) at (10.2, -6.9) {Computer: fringe counting\\$\Delta d_{M2} = \frac{\lambda}{2}\,m$, \quad $v_{M2} = \frac{\lambda}{2}\,f_{\text{fringe}}$};
+        \draw[alight] (lens.south) -- (pd.north);
+        \draw[alight] (lens.south west) -- (cam.north);
+        \draw[adata] (pd) -- (fpga);
+        \draw[adata] (fpga) -- (pc2);
+        \draw[adata] (cam.south) -- ++(0, -0.6) -| (pc2.south);
+
+        % ---------- legend ----------
+        \draw[amech] (0, -9.35) -- (1.0, -9.35); \node[font=\scriptsize, anchor=west] at (1.1, -9.35) {Mechanical motion};
+        \draw[alight] (4.3, -9.35) -- (5.3, -9.35); \node[font=\scriptsize, anchor=west] at (5.4, -9.35) {Light};
+        \draw[adata] (7.6, -9.35) -- (8.6, -9.35); \node[font=\scriptsize, anchor=west] at (8.7, -9.35) {Electrical signals and data};
+    \end{tikzpicture}}
+    \caption{How the displacement is produced and measured. The computer commands the stepper motor through the ESP32, and the reduction chain of the stage moves the platform by $\Delta x = sN$. The platform pushes the needle shaft of the interferometer, which is fixed to the frame, and the displacement of the movable mirror $M2$ changes the interference pattern. The camera and the photodiode detect it, and the computer counts the fringes to obtain the displacement and the velocity (the two blocks labeled computer are the same machine).}
+    \label{fig:setup_diagram}
+\end{figure}
 
 
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        block/.style={draw, thick, rounded corners=3pt, fill=gray!10, text width=2.0cm, minimum height=1.30cm, align=center, font=\scriptsize},
+        arrow/.style={-{Stealth[length=2.2mm]}, thick},
+        note/.style={font=\scriptsize, align=center, text width=2.1cm, text=black!80}
+    ]
+        \node[block] (m) {Stepper motor 28BYJ-48\\$4096$ half-steps/rev};
+        \node[block, right=0.5cm of m] (g) {External gears\\reduction $2:1$};
+        \node[block, right=0.5cm of g] (s) {M3 screw and nut\\$0.5\text{ mm/rev}$};
+        \node[block, right=0.5cm of s] (f) {Flexure lever\\reduction $5:1$};
+        \node[block, right=0.5cm of f, fill=violet!12] (p) {Stage platform};
+        \draw[arrow] (m) -- (g);
+        \draw[arrow] (g) -- (s);
+        \draw[arrow] (s) -- (f);
+        \draw[arrow] (f) -- (p);
+        \node[note, below=0.3cm of m] {$1$ half-step\\$= 1/4096$ rev};
+        \node[note, below=0.3cm of g] {Screw turns\\$1/8192$ rev};
+        \node[note, below=0.3cm of s] {Nut advances\\$61\text{ nm}$};
+        \node[note, below=0.3cm of f] {Motion reduced\\by $5$};
+        \node[note, below=0.3cm of p] {$s_{\text{CAD}} \approx 12.2\text{ nm/step}$};
+    \end{tikzpicture}
+    \caption{Reduction chain of one actuator of the Block Stage, from a motor half-step to the displacement of the platform.}
+    \label{fig:openflexure_chain}
+\end{figure}
 
-\section{Openflexure Calibration Results and Kinematic Analysis}
+\section{Openflexure Displacement Measurement}
 \label{sec:calibration_results}
 
-To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite{mengOpenFlexureBlockStage2020}, bidirectional calibration sweeps were performed across five-step counts ($N \in \{1000, 1500, \\ 2000, 2500, 3000\}$) in both positive and negative directions, each sweep for step size was measured 5 times, at a commanded cruise speed of $55\text{ steps/s}$ and acceleration of $150\text{ steps/s}^2$, recorded at $29.0\text{ fps}$ (\cref{fig:openflexure_cal,fig:single_run_1000}).
+To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite{mengOpenFlexureBlockStage2020}, bidirectional calibration sweeps were performed across five-step counts ($N \in \{1000, 1500, \\ 2000, 2500, 3000\}$) in both positive and negative directions, each sweep for step size was measured 5 times, at a commanded cruise speed of $55\text{ steps/s}$ and acceleration of $150\text{ steps/s}^2$, recorded at $29.0\text{ fps}$ (\cref{fig:openflexure_cal,fig:openflexure_step,fig:single_run_1000}).
 
-\begin{figure}
+\begin{figure}[htbp]
     \begin{center}
-        \includegraphics[width=15cm]{images/openflexure_calibration.png}
+        \includegraphics[width=12cm]{images/openflexure_displacement.png}
     \end{center}
-    \caption{Openflexure calibration of step size. Blue: negative direction; red: positive direction.}
+    \caption{Displacement of the OpenFlexure Block Stage measured with the interferometer against the commanded motor steps, for both directions ($n = 5$ runs per step count, $\pm 1\sigma$), with the linear fits and the nominal CAD line. Blue: negative direction; red: positive direction.}
     \label{fig:openflexure_cal}
 \end{figure}
 
-\subsection{Definition of Plot Metrics}
+\subsubsection{Metrics}
 \label{sec:plot_metrics}
 \begin{itemize}
     \item \textbf{Nominal CAD ($12.2\text{ nm/step}$):} Here, \textbf{CAD} stands for \textit{Computer-Aided Design}. This dotted reference line represents the idealized theoretical step size derived from the Block Stage geometric design assuming zero backlash, rigid plastic links, exact M3 lead-screw pitch ($0.5\text{ mm/rev}$), $2:1$ external gear reduction, $4096$ half-steps/rev on the 28BYJ-48 motor, and the $5:1$ flexure lever reduction ($\approx 12.2\text{ nm/step}$) \cite{mengOpenFlexureBlockStage2020}.
@@ -99,7 +220,7 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
 
 
 
-\subsection{Single-Run Dynamic Behavior}
+\subsubsection{Single-Run Dynamic Behavior}
 
 \begin{figure}
     \begin{center}
@@ -117,28 +238,45 @@ To characterize the displacement of the 3D-printed OpenFlexure Block Stage \cite
 \end{enumerate}
 
 \subsection{Linear Regression and Bidirectional Symmetry}
-\cref{fig:openflexure_cal}(a) plots total measured displacement $\Delta x$ against commanded steps $N \in \{1000, 1500, 2000, 2500, 3000\}$, with $n = 5$ repeated trials per step count in each direction ($25$ runs per direction, error bars indicating $\pm 1\sigma$ trial-to-trial standard deviation). Linear least-squares fits across all runs reveal strong linearity in both actuation directions:
+\cref{fig:openflexure_cal} plots total measured displacement $\Delta x$ against commanded steps $N \in \{1000, 1500, 2000, 2500, 3000\}$, with $n = 5$ repeated trials per step count in each direction ($25$ runs per direction, error bars indicating $\pm 1\sigma$ trial-to-trial standard deviation). Linear least-squares fits across all runs reveal strong linearity in both actuation directions:
 \begin{align}
     \text{Positive direction:}\quad s_+ &= 11.80 \pm 0.28\text{ nm/step} \quad (R^2 = 0.9875) \\
     \text{Negative direction:}\quad s_- &= 11.67 \pm 0.69\text{ nm/step} \quad (R^2 = 0.9249)
 \end{align}
 Both calibrated incremental slopes agree closely with the $12.2\text{ nm/step}$ nominal CAD value within experimental uncertainty (differing by only $3.3\%\text{--}4.3\%$) and agree with each other within $\sim 1.1\%$, confirming consistent bidirectional sensitivity once preloaded. The negative direction exhibits slightly larger run-to-run dispersion ($\pm 0.69\text{ nm/step}$ and wider $\pm 1\sigma$ error bars at $N = 1500$ and $2500$) than the positive direction ($\pm 0.28\text{ nm/step}$), reflecting minor mechanical asymmetry between pushing against and relaxing with the PLA flexure restoring force and gear mesh. Crucially, both regressions share a small negative $y$-intercept ($\approx -1.4\text{ to }-1.5\ \mu\text{m}$), capturing a nearly constant startup loss prior to rigid engagement. Because this startup offset is absorbed into the intercept rather than the slope, multi-step linear regression accurately recovers the true incremental stage sensitivity ($\sim 11.7\text{--}11.8\text{ nm/step}$) even when single-run averages are pulled down at shorter travels ($N = 1000$).
 
-Finally, \cref{fig:openflexure_cal}(b) compares the grouped mean values ($\pm 1\sigma$, $n = 5$) of $s_{\text{avg}}$ and $s_{\text{cruise}}$ across each step count and direction. As expected, $s_{\text{avg}}$ climbs steadily toward $\sim 11\text{--}11.5\text{ nm/step}$ for larger step counts ($1500\text{--}3000$ steps) as the initial compliance transient becomes proportionally smaller relative to total travel. Meanwhile, the $s_{\text{cruise}}$ averages consistently sit slightly above the $12.2\text{ nm/step}$ nominal line ($\sim 13\text{--}16\text{ nm/step}$, with individual runs peaking near $\sim 20.8\text{ nm/step}$); this occurs because taking the upper $40\%$ fastest intervals biases toward integer-frame rounding at smaller $\Delta f$ ($29.0\text{ fps}$) and captures brief elastic spring-forward bursts immediately following static friction breakaway, alongside minor tooth-to-tooth variability in the printed gear mesh.
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width=12cm]{images/openflexure_step_size.png}
+    \end{center}
+    \caption{Mean step size of the OpenFlexure Block Stage per step count and direction: run average $s_{\text{avg}}$ (solid bars) and cruise plateau $s_{\text{cruise}}$ (hatched bars), mean $\pm 1\sigma$ over $n = 5$ runs, compared with the nominal CAD value. Blue: negative direction; red: positive direction.}
+    \label{fig:openflexure_step}
+\end{figure}
 
-\subsection{Mirror Velocity from the Fringe Rate}
+Finally, \cref{fig:openflexure_step} compares the grouped mean values ($\pm 1\sigma$, $n = 5$) of $s_{\text{avg}}$ and $s_{\text{cruise}}$ across each step count and direction. As expected, $s_{\text{avg}}$ climbs steadily toward $\sim 11\text{--}11.5\text{ nm/step}$ for larger step counts ($1500\text{--}3000$ steps) as the initial compliance transient becomes proportionally smaller relative to total travel. Meanwhile, the $s_{\text{cruise}}$ averages consistently sit slightly above the $12.2\text{ nm/step}$ nominal line ($\sim 13\text{--}16\text{ nm/step}$, with individual runs peaking near $\sim 20.8\text{ nm/step}$); this occurs because taking the upper $40\%$ fastest intervals biases toward integer-frame rounding at smaller $\Delta f$ ($29.0\text{ fps}$) and captures brief elastic spring-forward bursts immediately following static friction breakaway, alongside minor tooth-to-tooth variability in the printed gear mesh.
+
+\section{Velocity Measurement}
 \label{sec:openflexure_velocity}
 
 The same fringe traces give the velocity at which the stage was moving. Applying \cref{eq:velocity_fringe_rate} to every interval between consecutive peaks (or troughs), the fringe-crossing frequency is $f_{\text{fringe}} = f_s/\Delta f$, with $f_s = 29.0\text{ fps}$ and $\Delta f$ the number of frames of the interval, and the mirror speed is $v_{M2} = \frac{\lambda}{2}f_{\text{fringe}}$, with $\lambda/2 = 316.4\text{ nm}$. The sign of the velocity is taken from the commanded direction, since a single ROI trace cannot resolve it (\cref{sec:roi_fringe_velocity}). The mean velocity of a run is its displacement divided by the duration of the active window, and the cruise velocity is the median over the $40\%$ fastest intervals, as for $s_{\text{cruise}}$. The expected (theoretical) velocity is the commanded speed multiplied by the displacement per step of the stage, $v_{\text{expected}} = v_{\text{cmd}}\,s$. With the nominal CAD step $s = 12.2\text{ nm/step}$, obtained from the geometry of the Block Stage (\cref{sec:plot_metrics}), the commanded $55\text{ steps/s}$ give $v_{\text{expected}} = 55 \times 12.2\text{ nm} = 0.671\ \mu\text{m/s}$, which corresponds to a fringe rate of $2.1\text{ Hz}$. Using the calibrated slopes of the regression instead, $s_+ = 11.80\text{ nm/step}$ and $s_- = 11.67\text{ nm/step}$, gives $0.649\ \mu\text{m/s}$ and $0.642\ \mu\text{m/s}$.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{images/openflexure_velocity.png}
-    \caption{Mirror velocity obtained from the fringe rate with \cref{eq:velocity_fringe_rate} compared with the theoretical velocity. a) Velocity of each fringe interval of the $1000$-step positive sweep of \cref{fig:single_run_1000}, with the error bars of $\pm 1$ frame of the interval, the run mean, the cruise median and the theoretical value of $0.671\ \mu\text{m/s}$; b) mean (squares) and cruise (circles) velocities ($\pm 1\sigma$, $n = 5$) of every direction and step count against the theoretical value, and the band (purple) of the values obtained with the calibrated slopes. Blue: negative direction; red: positive direction.}
+    \includegraphics[width=12cm]{images/openflexure_velocity_run.png}
+    \caption{Mirror velocity of the $1000$-step positive sweep of \cref{fig:single_run_1000}, obtained from the fringe rate with \cref{eq:velocity_fringe_rate}. Each point is the velocity of one fringe interval, with the error bars of $\pm 1$ frame of the interval, and the lines show the run mean, the cruise median and the theoretical value of $0.671\ \mu\text{m/s}$.}
     \label{fig:velocity_1000}
 \end{figure}
 
-\cref{fig:velocity_1000}a shows the velocity of the $1000$-step sweep. The velocity rises from about $0.4\ \mu\text{m/s}$ during the acceleration ramp, stays around a cruise value of $0.57\ \mu\text{m/s}$ and drops during the deceleration, following the three phases described for the instantaneous step size. The error bars are the uncertainty of one frame in the length of each interval, $\delta v = v/\Delta f$, about $6\%$ in the plateau. The cruise value is below the theoretical $0.671\ \mu\text{m/s}$, which corresponds to the cruise step of $10.43\text{ nm/step}$ of this run, and the mean is lower still because it includes the ramps. \Cref{fig:velocity_1000}b compares all the sweeps with the theoretical velocity: the mean velocities lie below it and the cruise velocities above it, and the band obtained with the calibrated slopes falls between both.
+
+
+\cref{fig:velocity_1000} shows the velocity of the $1000$-step sweep. The velocity rises from about $0.4\ \mu\text{m/s}$ during the acceleration ramp, stays around a cruise value of $0.57\ \mu\text{m/s}$ and drops during the deceleration, following the three phases described for the instantaneous step size. The error bars are the uncertainty of one frame in the length of each interval, $\delta v = v/\Delta f$, about $6\%$ in the plateau. The cruise value is below the theoretical $0.671\ \mu\text{m/s}$, which corresponds to the cruise step of $10.43\text{ nm/step}$ of this run, and the mean is lower still because it includes the ramps. \Cref{fig:velocity_summary} compares all the sweeps with the theoretical velocity: the mean velocities lie below it and the cruise velocities above it, and the band obtained with the calibrated slopes falls between both.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=12cm]{images/openflexure_velocity_summary.png}
+    \caption{Mean (squares) and cruise (circles) mirror velocities ($\pm 1\sigma$, $n = 5$) of every direction and step count against the theoretical value from the CAD step (dotted) and the band (purple) of the values obtained with the calibrated slopes. Blue: negative direction; red: positive direction.}
+    \label{fig:velocity_summary}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
@@ -156,3 +294,10 @@ All      & $50$ & $0.562 \pm 0.071$ & $0.780 \pm 0.128$ & $0.671$ & $0.642$--$0.
 \end{table}
 
 \Cref{tab:openflexure_velocity} summarizes the velocity of all sweeps, together with the expected velocity of each direction computed with its calibrated slope. The mean velocity, $0.562 \pm 0.071\ \mu\text{m/s}$, is lower than the expected one because it includes the acceleration ramp, the breakaway and the relaxation at the end of each sweep; consistently, it grows with the number of steps, from $0.526 \pm 0.102\ \mu\text{m/s}$ for $N = 1000$ to $0.586 \pm 0.041\ \mu\text{m/s}$ for $N = 3000$, as these transients weigh less. The cruise velocity, $0.780 \pm 0.128\ \mu\text{m/s}$, is above the expected value, which is the same bias already discussed for $s_{\text{cruise}}$: it selects the fastest intervals, and at $29\text{ fps}$ an error of one frame in an interval of about $16$ frames changes the velocity by $\sim 6\%$. The expected value computed with the calibrated slopes, $s_+ = 11.80\text{ nm/step}$ and $s_- = 11.67\text{ nm/step}$, is $0.649\ \mu\text{m/s}$ and $0.642\ \mu\text{m/s}$, between the mean and the cruise values. The negative direction shows the larger dispersion, in agreement with the mechanical asymmetry found in the regression. Finally, the fastest intervals correspond to fringe rates below about $4.5\text{ Hz}$, so even then there are more than $6$ frames per fringe and the velocities are far from the aliasing limit of the camera (\cref{sec:camera_velocity}).
+
+\section{Conclusions}
+\label{sec:setup_conclusions}
+
+This chapter showed that a compact and low-cost interferometric system, built from a recycled optical unit and held together by 3D-printed mounts, can be used to characterize a 3D-printed positioner. The mounts keep the interferometer and the detectors in a fixed relative position and couple them to the OpenFlexure Block Stage, so that the motion of the stage is transferred to the movable mirror and appears as a displacement of the interference fringes (\cref{sec:experimental_setup,sec:openflexure_stage}). From the same fringe traces, the displacement and the velocity of the stage were obtained at the same time. The measured displacement per step is consistent in both directions and slightly below the value expected from the design of the stage, as would be expected from the backlash, the friction and the elasticity of a plastic mechanism (\cref{sec:calibration_results}). The velocity follows the profile commanded to the motor, with an acceleration ramp, a cruise phase and a deceleration, and the expected velocity is bounded by the mean and cruise velocities measured in the sweeps (\cref{sec:openflexure_velocity}).
+
+Returning to the problems stated in the introduction, the setup allowed the real behavior of the stage to be measured instead of assumed, provided the displacement and the velocity from a single measurement with a single mechanical coupling to the stage, and did so in a compact assembly that works without an optical table. The results also show the limits of the current measurement. A fringe corresponds to many steps of the stage, so the step is obtained from the accumulated displacement rather than resolved individually, and the camera frame rate limits the precision of each velocity. Tracking the phase within a fringe and using the photodiode and the FPGA, validated in the previous chapter, are the natural ways of extending the measurement to a finer resolution and to faster motions.
