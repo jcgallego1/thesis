@@ -2,12 +2,12 @@
 \pagestyle{fancy}
 \section*{Resumen}
 \addcontentsline{toc}{section}{RESUMEN}%-------todo parece bien pero esta linea genera un error desconocido 
-\todo[inline]{\noindent El resumen permite identificar la esencia del escrito, mencionando brevemente el objetivo y la metodología, así como los resultados y las conclusiones (mínimo 150, máximo 250 palabras).}
+Este trabajo presenta el diseño y la implementación de un sistema compacto y de bajo costo para medir el desplazamiento y la velocidad de sistemas de posicionamiento de precisión. El sistema se basa en un interferómetro de Michelson construido a partir de una unidad óptica reciclada de un reproductor Blu-ray, cuyo patrón de interferencia se registra con una cámara web que proporciona la información espacial y la dirección del movimiento mediante el seguimiento de la irradiancia en una región de interés. Como segundo detector se desarrolló un fotodiodo con amplificador de transimpedancia y disparador de Schmitt, cuya señal digital se adquiere con una FPGA a 50 MHz; la cadena completa de adquisición se calibró con luz pulsada entre 100 Hz y 2 MHz sin pérdida de pulsos, lo que demuestra su viabilidad para medir movimientos rápidos. Los componentes se integran mediante soportes modulares impresos en 3D que mantienen su posición relativa y permiten operar sin mesa óptica. Como aplicación, se caracterizó el OpenFlexure Block Stage, una plataforma flexible impresa en 3D, con barridos bidireccionales de 1000 a 3000 pasos. El desplazamiento por paso resultó de $11.80 \pm 0.28$ nm/paso en el sentido positivo y $11.67 \pm 0.69$ nm/paso en el negativo, entre 3\,\% y 4\,\% por debajo del valor nominal de diseño ($12.2$ nm/paso), y la velocidad obtenida a partir de la tasa de franjas fue consistente con el perfil de movimiento comandado. Los resultados muestran que un interferómetro de bajo costo permite medir el comportamiento real de posicionadores impresos en 3D, y dejan la implementación del fotodiodo y la FPGA como sistema de medición para trabajo futuro, con el fin de extender la medición a movimientos más rápidos.
 
 
 
 %Las palabras clave son los términos, materias y terminología que hacen posible describir y recuperar un documento en una disciplina específica. Pregúntese, por ejemplo: ¿con qué palabras puede un usuario de Internet recuperar mi documento? ¿Cuáles son los términos con los que mis colegas abordan esta temática? 3-7 palabras clave.
-\vspace{1cm}\textbf{\textit{Palabras clave ---} Artículo científico, artículo de revisión, investigación, estilos de citación}
+\vspace{1cm}\textbf{\textit{Palabras clave ---} Interferometría de Michelson, detección óptica, FPGA, posicionamiento de precisión, OpenFlexure, impresión 3D, instrumentación de bajo costo}
 
 
 %Miembros de la Facultad de Ciencias Económicas incluyen Clasificación JEL de la American Economic Association, disponible en https://bit.ly/3bdELGL
@@ -21,12 +21,12 @@
 \addcontentsline{toc}{section}{ABSTRACT}%-------todo parece bien pero esta linea genera un error desconocido 
 
 %No utilices traductores automáticos en línea, pues no tienen la capacidad de interpretar términos académicos y científicos. Es buena idea asesorarse de un traductor profesional. 
-\todo[inline]{\noindent El abstract es el mismo resumen pero en idioma inglés. Conserva la misma extensión o aproximada, es decir, mínimo 150 y máximo 250 palabras.}
+This work presents the design and implementation of a compact and low-cost system to measure the displacement and the velocity of precision positioning systems. The system is based on a Michelson interferometer built from a recycled Blu-ray optical unit, whose interference pattern is recorded with a webcam that provides the spatial information and the direction of the motion by tracking the irradiance in a region of interest. As a second detector, a photodiode with a transimpedance amplifier and a Schmitt trigger was developed, whose digital signal is acquired by an FPGA at 50 MHz; the complete acquisition chain was calibrated with pulsed light between 100 Hz and 2 MHz without missing pulses, which demonstrates its viability for measuring fast motions. The components are integrated with modular 3D-printed mounts that keep their relative position and allow the system to operate without an optical table. As an application, the OpenFlexure Block Stage, a 3D-printed flexure stage, was characterized with bidirectional sweeps of 1000 to 3000 steps. The displacement per step was $11.80 \pm 0.28$ nm/step in the positive direction and $11.67 \pm 0.69$ nm/step in the negative one, 3\,\% to 4\,\% below the nominal design value ($12.2$ nm/step), and the velocity obtained from the fringe rate was consistent with the commanded motion profile. The results show that a low-cost interferometer can measure the real behavior of 3D-printed positioners, and leave the implementation of the photodiode and the FPGA as a measurement system for future work, in order to extend the measurement to faster motions.
 
 
 
 %Las keywords son las mismas palabras clave pero en inglés. Dependiendo de la disciplina, indague en bases de datos y plataformas cuáles son las traducciones al inglés de sus palabras clave, tales como IEEE Taxonomy (ingenierías IEEE http://goo.gl/nf29xl) o en diccionarios y tesauros especializados.  
-\vspace{1cm}\textbf{\textit{Keywords ---} Scientific article, review article, research, citation styles}
+\vspace{1cm}\textbf{\textit{Keywords ---} Michelson interferometry, optical detection, FPGA, precision positioning, OpenFlexure, 3D printing, low-cost instrumentation}
 
 %Miembros de la Facultad de Ciencias Económicas incluyen Clasificación JEL de la American Economic Association, disponible en https://bit.ly/3bdELGL
 %Ejemplo de formato después de keywords:
